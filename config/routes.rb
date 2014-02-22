@@ -4,28 +4,21 @@ App::Application.routes.draw do
   devise_for :clients, :controllers => { :registrations => "registrations" }
     
   root :to => "pages#home"
-  
-  # match 'rest/fetch' => 'rest_api#fetch'
-  # match 'rest/submit' => 'rest_api#submit'
-  # match 'rest/notification' => 'rest_api#notification'
-  # match 'rest/user_identify' => 'rest_api#user_identify'
-  # match 'rest/user_check' => 'rest_api#user_check'
-  # match 'rest/ad_shown' => 'rest_api#ad_shown'
-  # match 'rest/upload_picture' => 'rest_api#upload_picture'
-  # match 'rest/delete_picture' => 'rest_api#delete_picture'
 
-  #post 'clients/add_money'
-  get  'clients/settings' #!!!
+  #get 'clients/settings' #!!!
 
-  # get  'campaigns/unapproved'
-  # get  'campaigns/select_type'
-  # post 'campaigns/after_create'
-  # get  'campaigns/audience'
-  # get  'campaigns/target'
-
-  #post 'purchases/minimal_purchase'
-
-  #get 'sdkkeys/:id/users', to: 'sdkkeys#users', as: 'sdkkey_users'
+  resources :rest do
+    collection do
+      get  :fetch
+      get  :notification
+      post :submit
+      post :user_identify
+      post :user_check
+      post :ad_shown
+      post :upload_picture
+      post :delete_picture
+    end 
+  end
 
   resources :campaigns do
     resources :locations
@@ -91,8 +84,5 @@ App::Application.routes.draw do
     end
     resources :sdkkeys
   end
-
-  resources :contact
-  resources :blogs
 
 end
