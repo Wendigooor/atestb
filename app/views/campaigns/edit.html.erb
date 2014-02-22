@@ -1,0 +1,16 @@
+
+<%= stylesheet_link_tag "bootstrap" %>
+
+<div class="jumbotron">
+
+<h1>Editing campaign</h1>
+
+<% if @campaign.client == current_client || current_client.admin %>
+	<%= render 'form', :path => client_campaign_path %>
+<% else %>
+	You can't edit approved or foreign campaign.
+<% end %>
+
+<%= link_to 'Back', client_campaigns_path, :class => "btn btn-primary" %>
+
+</div>

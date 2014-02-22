@@ -1,0 +1,59 @@
+
+<%= javascript_include_tag :application %>
+<%= stylesheet_link_tag "bootstrap" %>
+
+<div class="jumbotron">
+
+	Developer: <%= @developer.username %> | <%= @developer.email %>
+
+</div>
+
+<table class="table table-striped">
+	<tr>
+		<td>name</td>
+		<td>key</td>
+		<td>clicks</td>
+		<td>Placements</td>
+		<td></td>
+		<td></td>
+	</tr>
+
+	<% @developer.sdkkeys.each do |key| %>
+	<tr>
+		<td><%= key.name %></td>
+		<td><%= key.key %></td>
+		<td><%= key.clicks %></td>
+		<td>
+			<% key.sdkkey_placements.each_with_index do |placement, index| %>
+				<input id="sdkkey_placements_checkbox" name="on" type="checkbox" data-sdkkey-id="<%= key.id %>" data-placement-id="<%= index + 1 %>" <% if SdkkeyPlacement.where(:sdkkey_id => key.id, :placement_id => index + 1).first.on %>checked="checked"<% end %> /> 
+				<%= Placement.find(index + 1).name %> (point: <%= Placement.find(index + 1).point %>)
+			<% end %>
+		</td>
+		<td>
+			<% if key.active %>
+			<%= link_to 'Stop', activate_sdkkeys_path(:key_id => key.id, :path => developer_path(@developer)), :class => 'btn btn-success' %>
+			<% else %>
+			<%= link_to 'Start', activate_sdkkeys_path(:key_id => key.id, :path => developer_path(@developer)), :class => 'btn btn-success' %>
+			<% end %>
+		</td>
+		<td><%= link_to 'Delete', client_sdkkey_path(current_client, key, :path => developer_path(@developer)), :method => :delete, :confirm => 'Are you sure?', :class => "btn btn-sm btn-danger" %></td>
+	</tr>
+	<% end %>
+
+</table>
+
+<%= form_for @key, :url => client_sdkkeys_path(@developer, :path => developer_path(@developer) ) do |f| %>
+<%= flash[:error] %>
+
+<div class="field">
+	<%= f.label :name %><br />
+	<%= f.text_field :name %>
+</div>
+
+</br>
+<div class="actions">
+	<%= f.submit %>
+</div>
+<% end %>
+
+<%= link_to 'Profile', client_path(current_client), :class => "btn btn-primary"  %>

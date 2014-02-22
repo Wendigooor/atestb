@@ -1,0 +1,92 @@
+<%= stylesheet_link_tag "bootstrap" %>
+<%= javascript_include_tag :application %>
+
+<div class="jumbotron">
+
+<% if current_client.admin? %>
+<p>
+  <b>Author: </b>
+  <i><%= @campaign.client.email %></i>
+</p>
+<br/>
+<% end %>
+
+<p>
+  <b>Target:</b>
+  <% if !@campaign.locations.any? %>
+    All countries
+  <% else %>
+    All countries except:
+  <% end %>
+  <% @campaign.locations.each do |location| %>
+    </br>
+    <%= location.country %>
+    <% if location.state != "" %>
+      | <%= location.state %>
+    <% end %>
+  <% end %>
+  <br />
+  <b>Gender:</b>
+  <%= Campaign::GENDERS[@campaign.gender].first %>
+  <br />
+  <b>Age ranges:</b>
+  <% @campaign.age_ranges.each do |age_range| %>
+    <br />
+    <%= age_range.age_left %> - <%= age_range.age_right %>
+  <% end %>
+</p>
+
+<%if @campaign.background_url %>
+<p>
+    <b>Background image:</b>
+    <%= image_tag "/images/" + @campaign.background_url, :style => "max-height: 250px; max-width: 250px; min-height: 20px; min-width: 20px;" %>
+</p>
+<% end %>
+
+<%if @campaign.border_color %>
+<p>
+    <div style="background-color:#<%=@campaign.border_color %>; height:70px; width:100px;" align-text="center" display="inline-block">
+      <b>Border color</b>
+    </div>
+</p>
+<% end %>
+
+<%if @campaign.title_color %>
+<p>
+    <div style="background-color:#<%=@campaign.title_color %>; height:70px; width:100px;" align-text="center" display="inline-block">
+      <b>Title color</b>
+    </div>
+</p>
+<% end %>
+
+<p>
+  <b>Question:</b>
+  <p>
+    <% if @campaign.image_url %>
+	 <%= image_tag "/images/" + @campaign.image_url, :style => "max-height: 250px; max-width: 250px; min-height: 20px; min-width: 20px;" %>
+    <% end %>    
+    <i><%= @campaign.caption %></i>
+  </p>
+</p>
+
+</br>
+
+<div>
+    <b>Answers:</b>
+	<% @campaign.campaign_items.each_with_index do |item,index| %>
+        <p><b>#<%= index + 1 %></b></p>
+        <i><%= item.textUrl %></i>  (selected count = <%= item.selected_count %> )
+        </br>
+    	<% if @campaign.type_ad == 1 %>
+    		<%= image_tag "/images/" + item.textUrl, :style => "max-height: 250px; max-width: 250px; min-height: 20px; min-width: 20px;" %>
+    	<% end %>
+    	</br>
+    <% end %>
+</div>
+
+<%= link_to 'Edit', edit_client_campaign_path(current_client, @campaign), :class => "btn btn-success" %>
+</br>
+</br>
+<%= link_to 'Back', client_campaigns_path, :class => "btn btn-primary" %>
+
+</div>

@@ -1,0 +1,35 @@
+<%= javascript_include_tag :application %>
+<%= stylesheet_link_tag "bootstrap" %>
+
+<div class="jumbotron">
+
+<h2>Developers</h2>
+</br>
+
+</div>
+
+<% if current_client.admin %>
+
+	<table class="table table-striped">
+	<tr>
+		<td>Email</td>
+	    <td>Username</td>
+	    <td>Sdkkeys count</td>
+	    <td></td>
+	</tr>
+
+	<% @developers.each do |dev| %>
+	  <tr>
+	  	<td><%= dev.email %></td>
+	    <td><%= dev.username %></td>
+	    <td><%= dev.sdkkeys.count %></td>
+	    <td><%= link_to 'Show', developer_path(dev), :class => "btn btn-success" %></td>
+	  </tr>
+	<% end %>
+
+	</table>
+
+<% end %>
+
+
+<%= link_to 'Profile', client_path(current_client), :class => "btn btn-primary"  %>

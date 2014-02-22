@@ -1,0 +1,47 @@
+<%= javascript_include_tag :application %>
+<%= stylesheet_link_tag "bootstrap" %>
+
+<%= flash[:notice] %>
+
+
+<% if current_client.admin %>
+	<br />
+	<b><h2>Search by campaign id or caption</h2></b>
+	<input id="search_campaign"></input>
+	<div id='campaigns'>
+    	<%= render 'campaigns' %>
+    </div>
+<% else %>
+<div class="r w paypal">
+	<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
+	<input type="hidden" name="cmd" value="_s-xclick">
+	<input type="hidden" name="on1" value="<%= current_client.email %>" maxlength="100">
+	<input type="hidden" name="hosted_button_id" value="WCPKKSWQQ84RU">
+	<input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+	<img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+	</form>
+</div>
+	<div id='campaigns'>
+    	<%= render 'client_campaigns' %>
+    </div>
+<% end %>
+
+<div class="jumbotron">
+
+</br>
+<%= link_to 'Profile', client_path(current_client), :class => "btn btn-primary"  %>
+</br>
+<% unless current_client.admin %>
+	</br>
+	<%= link_to 'Add Credits', {:controller => :clients, :action => :add_money}, :class => 'add_money btn btn-primary' , :id => current_client.id %>
+    </br>
+    </br>
+    <%= link_to 'New Campaign', campaigns_select_type_path, :class => 'btn btn-primary' %>
+<% end %>
+
+</br>
+</br>
+<%= link_to 'Logout', destroy_client_session_path, :class => 'btn btn-danger' %>
+
+
+</div>

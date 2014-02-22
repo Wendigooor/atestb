@@ -1,0 +1,120 @@
+<html>
+<head>
+	<title>ATESTB</title>
+	<%= stylesheet_link_tag    :application, :media => "all" %>
+	<%= csrf_meta_tags %>
+</head>
+
+<body class="m">
+	<div class="a w">
+		<div class="r w white menu">
+
+			<div class="a white logo">
+				<%= image_tag "atestb_logo.jpg" %>
+			</div>
+
+			<div class="r white links blog">
+				<%= link_to "Blog", blogs_path %>
+			</div>
+			<div class="r white links pricing">
+				<a href="#">Pricing</a>
+			</div>
+			<div class="r white links advertisers">
+				<a href="#">Advertisers</a>
+			</div>
+			<div class="r white links about">
+				<a href="#">About</a>
+			</div>
+			<div class="r white links contact_us">
+				<%= link_to "Contact Us", contact_index_path %>
+			</div>
+
+		</div>
+
+		<div class="r white content_holder">
+			<%= yield %>
+
+		</div>
+
+		<div class="r b bottom_link_box">
+
+			<div class="r bottom_link_container">
+				<div class="a w l t underline"></div>
+				<div class="r link_category">HOME</div>
+				<div class="r bottom_page_links">
+					<%= link_to "Welcome", root_path, { :class => "r bottom_in_links"}%><br />
+					<%destroy_client_session_path%>
+					<%= link_to "Sign Up", new_client_registration_path, { :class => "r bottom_in_links"}%><br />
+					<a class="r bottom_in_links" href="#">Overview</a><br />
+				</div>
+
+			</div>
+
+			<div class="r bottom_link_container">
+				<div class="a w l t underline"></div>
+				<div class="r link_category">ADVERTISERS</div>
+				<div class="r bottom_page_links">
+					<%= link_to "Dashboard", new_client_session_path, { :class => "r bottom_in_links"}%><br />
+					<a class="r bottom_in_links" href="#">Client Profile</a><br />
+					<a class="r bottom_in_links" href="#">Planning</a><br />
+					<a class="r bottom_in_links" href="#">Trends</a><br />
+
+				</div>
+
+			</div>
+
+			<div class="r bottom_link_container">
+				<div class="a w l t underline"></div>
+				<div class="r link_category">ABOUT</div>
+				<div class="r bottom_page_links">
+
+					<a class="r bottom_in_links" href="#">Us</a><br />
+					<a class="r bottom_in_links" href="#">The Team</a><br />
+					<%= link_to "Contact", contact_index_path, {:class => "r bottom_in_links"} %><br />
+					<a class="r bottom_in_links" href="#">Support</a><br />
+
+				</div>
+
+			</div>
+
+			<div class="r bottom_link_container">
+				<div class="a w l t underline"></div>
+				<div class="r link_category">BLOG</div>
+				<div class="r bottom_page_links">
+
+					<%= link_to "Whats New", blogs_path, {:class => "r bottom_in_links"} %><br />
+					<a class="r bottom_in_links" href="#">Announcements</a><br />
+					<a class="r bottom_in_links" href="#">Industry</a><br />
+					<a class="r bottom_in_links" href="#">Design</a><br />
+
+				</div>
+
+			</div>
+
+			<div class="r bottom_link_container">
+				<div class="a w l t underline"></div>
+				<div class="r link_category">DETAILS</div>
+				<div class="r bottom_page_links">
+
+					<a class="r bottom_in_links" href="#">Information for Advertisers
+					</a><br />
+					<a class="r bottom_in_links" href="#">Privacy Policy
+					</a><br />
+					<a class="r bottom_in_links" href="#">Security Details</a><br />
+
+				</div>	
+			</div>
+
+			<div class="r bottom_link_container">
+				<div class="a w l t underline"></div>
+				<div class="r bottom_page_links">
+
+					<a class="r bottom_in_links a_b_copyrights" href="#">AtestB Inc.<br />
+						2010-2013</a>
+
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	</html>

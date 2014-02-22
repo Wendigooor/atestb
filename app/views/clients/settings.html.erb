@@ -1,0 +1,20 @@
+<div class="container">
+
+<div class="jumbotron">
+
+<% if current_client.admin %>
+	Current minimal purchase = <%= Settings.minimal_purchase %>
+	</br>
+	<input type="text">
+	</br>
+	<%= link_to 'Change minimum purchase', purchases_minimal_purchase_path, :class => 'minimal_purchase btn btn-success' %>
+<% end %>
+
+</br>
+<%= link_to 'Back to Profile', client_path(current_client), :class => 'btn btn-primary' %>
+
+</div>
+</div>
+
+<%= javascript_include_tag :application %>
+<%= stylesheet_link_tag "bootstrap" %>

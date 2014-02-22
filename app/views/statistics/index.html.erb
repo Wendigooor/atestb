@@ -1,0 +1,240 @@
+<%= javascript_include_tag :jquery_min %>
+<%= javascript_include_tag :exporting %>
+<%= javascript_include_tag :highcharts %>
+<%= javascript_include_tag :jquery_ui %>
+<%= stylesheet_link_tag "jquery_ui" %>
+
+
+<%= link_to 'Back to My Campaigns', client_campaigns_path, :class => "btn btn-primary" %>
+<%= link_to 'Answered Users', answered_users_client_campaign_statistics_path, :class => "btn btn-primary" %>
+</br>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script type="text/javascript">
+	
+		$(function () {
+
+			$('#day_line').highcharts({
+	            chart: {
+	                type: 'line'
+	            },
+	            title: {
+	                text: 'Day average clicks'
+	            },
+	            subtitle: {
+	                text: ''
+	            },
+	            xAxis: {
+	                categories: 
+	                [
+	                	<% @dates.each do |date| %>
+	                		"<%= date.strftime("%d/%m/%Y") %>"
+	                		,
+	                	<% end %>
+	                ]
+	            },
+	            yAxis: {
+	                title: {
+	                    text: 'Clicks'
+	                }
+	            },
+	            tooltip: {
+	                enabled: false,
+	                formatter: function() {
+	                    return '<b>'+ this.series.name +'</b><br/>'+
+	                        this.x +': '+ this.y;
+	                }
+	            },
+	            plotOptions: {
+	                line: {
+	                    dataLabels: {
+	                        enabled: true
+	                    },
+	                    enableMouseTracking: false
+	                }
+	            },
+	            series: [
+		            {
+		                name: 'Clicks counts',
+		                data: 
+		                [
+		                	<% @clicks_counts.each do |count| %>
+		                		<%= count.to_s %>
+		                		,
+		                	<% end %>
+		                ]
+		            }
+	            ]
+	        });
+
+	        $('#container_column').highcharts({
+	            chart: {
+	                type: 'column'
+	            },
+	            title: {
+	                text: 'Question: <%= @campaign.caption %>'
+	            },
+	            xAxis: {
+                categories: 
+                	['']
+           		},
+	            yAxis: {
+
+	                title: {
+	                    text: 'Selected count'
+	                }
+	            },
+	            plotOptions: {
+	                column: {
+	                    pointPadding: 0.2,
+	                    borderWidth: 0.5
+	                }
+	            },
+	            tooltip: {
+                	enabled: false,
+           		},
+	            series: 
+	            [
+	            <% @campaign.campaign_items.each_with_index do |item,i| %>
+	            	{
+	            		name: 'item #' + <%= i+1 %>,
+	            		data: [<%= item.selected_count %>]
+	            	},
+	            <% end %>
+	            ]
+	        });
+
+			$('#container_pie').highcharts({
+	        chart: {
+	            plotBackgroundColor: null,
+	            plotBorderWidth: null,
+	            plotShadow: false
+	        },
+	        title: {
+	            text: ''
+	        },
+	        tooltip: {
+	    	    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+	        },
+	        plotOptions: {
+	            pie: {
+	                allowPointSelect: true,
+	                cursor: 'pointer',
+	                dataLabels: {
+	                    enabled: true,
+	                    color: '#000000',
+	                    connectorColor: '#000000',
+	                    format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+	                }
+	            }
+	        },
+	        series: [{
+	            type: 'pie',
+	            name: '',
+	            data:
+	            [
+				<% @campaign.campaign_items.each_with_index do |item,i| %>
+					['item #' + <%= i+1 %>, <%= item.selected_count %>],
+				<% end %>
+				]
+	        }]
+	    });
+
+		$( "#datepicker_from" ).datepicker({ dateFormat: 'dd-mm-yy' });
+    	$( "#datepicker_to" ).datepicker({ dateFormat: 'dd-mm-yy' });
+});
+    
+	</script>
+</head>
+
+<body>
+
+<div id="day_line" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<div id="container_column" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+</hr>
+<span id="block" style="min-width: 310px; height: 150px; margin: 0 auto">
+
+<% @campaign.campaign_items.each_with_index do |item,index| %>
+        <p><b>item #<%= index + 1 %></b></p>
+        <i><%= item.textUrl %></i>  (selected count = <%= item.selected_count %> )
+        </br>
+    	<% if @campaign.type_ad == 1 %>
+    		<%= image_tag "/images/" + item.textUrl, :style => "max-height: 250px; max-width: 250px" %>
+    	<% end %>
+    	</br>
+<% end %>
+
+<div style="min-width: 310px; height: 600px; margin: 0 auto">
+	<%= form_for :range_dates, :method => :get do |f| %>
+		From:
+		<%= f.text_field :datepicker_from, :id => 'datepicker_from', :value => @date_from %>
+		<br />
+		To:
+		<%= f.text_field :datepicker_to, :id => 'datepicker_to', :value => @date_to %>
+		<br />
+		<%= f.submit :submit %>
+	<% end %>
+
+	<br />
+	Clicks today:
+	<%= @today_clicks.count %>
+
+	<br />
+	Clicks yesterday:
+	<%= @yesterday_clicks.count %>
+
+	<br />
+	Clicks this week:
+	<%= @this_week_clicks.count %>
+
+	<br />
+	Clicks last week:
+	<%= @last_week_clicks.count %>
+
+	<br />
+	Clicks in date range:
+	<%= @range_dates_clicks.count %>
+
+		<br />
+	Impressions today:
+	<%= @today_impressions.count %>
+	<% if @today_clicks.any? %>
+		( <%= (@today_impressions.count / @today_clicks.count.to_f).round(2) * 100 %> % )
+	<% end %>
+
+	<br />
+	Impressions yesterday:
+	<%= @yesterday_impressions.count %>
+	<% if @yesterday_clicks.any? %>
+		( <%= (@yesterday_impressions.count / @yesterday_clicks.count.to_f).round(2) * 100 %> % )
+	<% end %>
+
+	<br />
+	Impressions this week:
+	<%= @this_week_impressions.count %>
+	<% if @this_week_clicks.any? %>
+		( <%= (@this_week_impressions.count / @this_week_clicks.count.to_f).round(2) * 100 %> % )
+	<% end %>
+
+	<br />
+	Impressions last week:
+	<%= @last_week_impressions.count %>
+	<% if @last_week_clicks.any? %>
+		( <%= (@last_week_clicks.count / @last_week_clicks.count.to_f).round(2) * 100 %> % )
+	<% end %>
+
+	<br />
+	Impressions in date range:
+	<%= @range_dates_impressions.count %>
+	<% if @range_dates_clicks.any? %>
+		( <%= (@range_dates_impressions.count / @range_dates_clicks.count.to_f).round(2) * 100 %> % )
+	<% end %>
+</div>
+
+</span>
+</hr>
+<div id="container_pie" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+</body>
+

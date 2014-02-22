@@ -1,0 +1,12 @@
+<% if campaign.campaign_location_points.any? %>
+	<b>Current points:</b>
+	<% campaign.campaign_location_points.each_with_index do |point, i| %>
+		<br />
+		<div style="display:inline-block; width=600px;">
+			<b>Point #<%= i + 1 %></b>: Lat - <b><%= point.latitude %></b> Long - <b><%= point.longitude %></b> | Address - <b><%= point.address %></b> (Distance - <b><%= point.distance %></b>)
+		</div>
+		<div style="display:inline-block;">
+			<input type="button" id="remove_location_point" value="&#10005;" style="width: 30px;" data-location-point-id='<%= point.id %>'>
+		</div>
+	<% end %>
+<% end %>

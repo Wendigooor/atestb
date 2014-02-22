@@ -1,0 +1,71 @@
+
+<%= javascript_include_tag :application %>
+<%= stylesheet_link_tag "bootstrap" %>
+<%= stylesheet_link_tag "tablesorter" %>
+
+
+<br />
+<%= link_to 'Back to My Campaigns', client_campaigns_path, :class => "btn btn-primary" %>
+<br />
+<br />
+<%= link_to 'Back to Campaign Statistic', client_campaign_statistics_path, :class => "btn btn-primary" %>
+<br />
+<br />
+<%= link_to 'Download Excel', excel_client_campaign_statistics_path(params[:client_id], params[:campaign_id]), :class => "btn btn-primary" %>
+<br />
+
+answered users
+
+
+
+<%= form_for :search, :url => answered_users_client_campaign_statistics_path, :method => :get do |f| %>
+  Search by:
+  <%= f.label :age, 'Age' %>:
+  <%= f.number_field :age_left, :in => 18...120, :value => (params[:search][:age_left] if params[:search].present?) %>
+  <%= f.number_field :age_right, :in => 18...120, :value => (params[:search][:age_right] if params[:search].present?)%>
+  <%= f.label :sex, 'Sex' %>:
+  <%= f.select :sex, Campaign::GENDERS, :selected => (params[:search][:sex] if params[:search].present?)%>  
+  <%= f.submit :Search %>
+<% end %>
+
+<br/>
+
+<b>Total users: <%= @users.count %></b>
+<br/>
+
+<table class="tablesorter" id="users_clicks">
+<thead> 
+<tr>
+    <th>Age</th>
+    <th>Sex</th>
+    <th>Latitude</th>
+    <th>Longitude</th>
+    <th>Location</th>
+    <th>Answer</th>
+</tr>
+</thead>
+
+<tbody>
+
+<% @users.each do |user| %>
+  <tr>
+    <td><%= user.age_range.full_range %></td>
+    <td>
+      <% if user.sex %>
+        <%= Campaign::GENDERS[user.sex].first %>
+      <% end %>
+    </td>
+    <td><%= user.latitude %></td>
+    <td><%= user.longitude %></td>
+    <td>
+	<% if user.location_id? and Location.find(user.location_id).country? and Location.find(user.location_id).state %>
+		<%= Location.find(user.location_id).country %> | <%= Location.find(user.location_id).state %>
+	<% end %>
+    </td>
+    <td>Item #<%= Campaign.find(params[:campaign_id]).campaign_items.index( CampaignItem.find(Click.where(user_id: user.id, campaign_id: params[:campaign_id]).first.answer_id) ) + 1 %></td>
+  </tr>
+<% end %>
+
+</tbody>
+
+</table>

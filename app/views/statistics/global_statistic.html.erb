@@ -1,0 +1,181 @@
+
+<%= javascript_include_tag :jquery_min %>
+<%= javascript_include_tag :exporting %>
+<%= javascript_include_tag :highcharts %>
+<%= javascript_include_tag :jquery_ui %>
+<%= stylesheet_link_tag "jquery_ui" %>
+
+<%= link_to 'Back to Campaigns', client_campaigns_path(current_client), :class => "btn btn-primary" %>
+</br>
+<%= link_to 'Profile', client_path(current_client), :class => "btn btn-primary"  %>
+</br>
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+	<script type="text/javascript">
+	
+$(document).ready(function(){
+
+			$('#day_line').highcharts({
+	            chart: {
+	                type: 'line'
+	            },
+	            title: {
+	                text: 'Day average clicks'
+	            },
+	            subtitle: {
+	                text: ''
+	            },
+	            xAxis: {
+	                categories: 
+	                [
+	                	<% @dates.each do |date| %>
+	                		"<%= date.strftime("%d/%m/%Y") %>"
+	                		,
+	                	<% end %>
+	                ]
+	            },
+	            yAxis: {
+	                title: {
+	                    text: 'Clicks'
+	                }
+	            },
+	            tooltip: {
+	                enabled: false,
+	                formatter: function() {
+	                    return '<b>'+ this.series.name +'</b><br/>'+
+	                        this.x +': '+ this.y;
+	                }
+	            },
+	            plotOptions: {
+	                line: {
+	                    dataLabels: {
+	                        enabled: true
+	                    },
+	                    enableMouseTracking: false
+	                }
+	            },
+	            series: [
+		            {
+		                name: 'Clicks counts',
+		                data: 
+		                [
+		                	<% @clicks_counts.each do |count| %>
+		                		<%= count.to_s %>
+		                		,
+		                	<% end %>
+		                ]
+		            }
+	            ]
+	        });
+
+
+		$( "#datepicker_from" ).datepicker({ dateFormat: 'yy-mm-dd' });
+		$( "#datepicker_to" ).datepicker({ dateFormat: 'yy-mm-dd' });
+
+});
+    
+	</script>
+</head>
+
+<body>
+
+<div id="day_line" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+<div style="min-width: 310px; height: 600px; margin: 0 auto">
+	<%= form_for :range_dates, :method => :get do |f| %>
+		From:
+		<%= f.text_field :datepicker_from, :id => 'datepicker_from', :value => @date_from %>
+		<br />
+		To:
+		<%= f.text_field :datepicker_to, :id => 'datepicker_to', :value => @date_to %>
+		<br />
+		<%= f.submit :submit %>
+	<% end %>
+
+	<br />
+	Clicks today:
+	<%= @today_clicks.count %>
+
+	<br />
+	Clicks yesterday:
+	<%= @yesterday_clicks.count %>
+
+	<br />
+	Clicks this week:
+	<%= @this_week_clicks.count %>
+
+	<br />
+	Clicks last week:
+	<%= @last_week_clicks.count %>
+
+	<br />
+	Clicks in date range:
+	<%= @range_dates_clicks.count %>
+
+	</hr>
+
+	<br />
+	Impressions today:
+	<%= @today_impressions.count %>
+	<% if @today_clicks.any? %>
+		( <%= (@today_impressions.count / @today_clicks.count.to_f).round(2) * 100 %> % )
+	<% end %>
+
+	<br />
+	Impressions yesterday:
+	<%= @yesterday_impressions.count %>
+	<% if @yesterday_clicks.any? %>
+		( <%= (@yesterday_impressions.count / @yesterday_clicks.count.to_f).round(2) * 100 %> % )
+	<% end %>
+
+	<br />
+	Impressions this week:
+	<%= @this_week_impressions.count %>
+	<% if @this_week_clicks.any? %>
+		( <%= (@this_week_impressions.count / @this_week_clicks.count.to_f).round(2) * 100 %> % )
+	<% end %>
+
+	<br />
+	Impressions last week:
+	<%= @last_week_impressions.count %>
+	<% if @last_week_clicks.any? %>
+		( <%= (@last_week_impressions.count / @last_week_clicks.count.to_f).round(2) * 100 %> % )
+	<% end %>
+
+	<br />
+	Impressions in date range:
+	<%= @range_dates_impressions.count %>
+	<% if @range_dates_clicks.any? %>
+		( <%= (@range_dates_impressions.count / @range_dates_clicks.count.to_f).round(2) * 100 %> % )
+	<% end %>
+
+</div>
+</hr>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

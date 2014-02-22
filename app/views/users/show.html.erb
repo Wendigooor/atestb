@@ -1,0 +1,27 @@
+<%= javascript_include_tag :application %>
+<%= stylesheet_link_tag "bootstrap" %>
+
+
+<%= link_to 'Profile', client_path(current_client), :class => "btn btn-primary"  %>
+<br />
+
+user : Macaddress <%= @user.macaddress %> | Age <%= @user.age_range.full_range %> | Sex <%= @user.sex %> | Latitude <%= @user.latitude %> | Longitude <%= @user.longitude %> <% if @user.location %> | Location <%= @user.location.country %> <% end %> 
+<br />
+<table class="table table-striped">
+<tr>
+    <td>Sdkkey</td>
+    <td>Campaign</td>
+    <td>Answer</td>
+    <td>Date</td>
+</tr>
+
+<% @clicks.each do |click| %>
+  <tr>
+    <td><%= click.sdkkey %></td>
+    <td><%= link_to Campaign.find(click.campaign_id).caption, client_campaign_path( Campaign.find(click.campaign_id).client, Campaign.find(click.campaign_id)) if Campaign.exists?(id: click.campaign_id) %></td>
+    <td>Item #<%= Campaign.find(click.campaign_id).campaign_items.index( CampaignItem.find(Click.where(user_id: click.user_id, campaign_id: click.campaign_id).first.answer_id) ) + 1 if Campaign.exists?(id: click.campaign_id) %></td>
+    <td><%= click.date %></td>
+  </tr>
+<% end %>
+
+</table>

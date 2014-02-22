@@ -1,0 +1,10 @@
+<%= javascript_include_tag :application %>
+<%= stylesheet_link_tag "bootstrap" %>
+
+<h1>New campaign</h1>
+
+<div class="jumbotron">
+
+<%= render 'form', :path => client_campaigns_path(:type_ad => @campaign.type_ad, :step => true) %>
+
+</div>

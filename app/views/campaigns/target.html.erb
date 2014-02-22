@@ -1,0 +1,65 @@
+<%= javascript_include_tag :application %>
+<%= stylesheet_link_tag "bootstrap" %>
+
+<div class="jumbotron">
+
+<p>
+  <b>Target:</b>
+  <% if !@campaign.locations.any? %>
+    All countries
+  <% end %>
+  <% @campaign.locations.each do |location| %>
+    </br>
+    <%= location.country %>
+    <% if location.state != "" %>
+      | <%= location.state %>
+    <% end %>
+  <% end %>
+  <br />
+  <b>Gender:</b>
+  <%= Campaign::GENDERS[@campaign.gender].first %>
+  <br />
+  <b>Age ranges:</b>
+  <% @campaign.age_ranges.each do |age_range| %>
+    <br />
+    <%= age_range.age_left %> - <%= age_range.age_right %>
+  <% end %>
+</p>
+
+Pick the audience for you survey "<%= @campaign.caption %>"
+
+<%= form_for :target, :url => campaign_locations_path(@campaign), :method => :post do |f| %>
+
+<b>Targeting</b>
+</br>
+<%= radio_button_tag 'filter', 'false', false %> No filter <br>
+<%= radio_button_tag 'filter', 'true', true %> Filter by locations <br>
+</hr>
+</br>
+<div id="filter">
+
+</br>
+<b>Geography:</b>
+
+<div class="field">
+  <%= f.country_select :country, { prompt: "All countries", class: "form-control"}, :selected => 'AF', :multiple => :true, size: 10, :id => "country_select" %>
+</div>
+
+<div id="us_states">
+  <%= f.label :us_states %><br />
+  <%= subregion_select f.object_name, :state, 'US', {  } , :multiple => :true, size: 10 %>
+</div>
+</div>
+
+<%= hidden_field_tag :campaign_id, @campaign.id %>
+
+</br>
+<div class="actions">
+  <%= f.submit "Next step", :class => "btn btn-primary" %>
+</div>
+<% end %>
+
+</br>
+<%= link_to 'Back', client_campaign_path(current_client, @campaign), :class => "btn btn-primary" %>
+
+</div>

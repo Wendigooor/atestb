@@ -1,0 +1,44 @@
+
+<%= javascript_include_tag :application %>
+<%= stylesheet_link_tag "bootstrap" %>
+
+<div class="container">
+
+<div class="jumbotron">
+
+
+<% if current_client.admin %>
+
+ <%= form_for @client, :url => clients_path, :method => :post do |f| %>
+ 	<p>
+	 	<%= f.label :username %>
+	 	<%= f.text_field :username %>
+ 	</p>
+ 	<p>
+	 	<%= f.label :email %>
+	 	<%= f.text_field :email %>
+ 	</p>
+ 	<p>
+	 	<%= f.label :password %>
+	 	<%= f.text_field :password %>
+	</p>
+	<p>
+	 	<%= f.label :admin %>
+	 	<%= f.check_box :admin %>
+	</p>
+	<%= f.hidden_field :developer, :value => false %>
+	<p>
+ 		<%= f.submit "Submit" %>
+ 	</p>
+ <% end %>
+
+<% end %>
+
+
+</br>
+<%= link_to 'Profile', client_path(current_client), :class => "btn btn-primary"  %>
+</br>
+
+</div>
+
+</div>

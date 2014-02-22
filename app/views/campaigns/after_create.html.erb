@@ -1,0 +1,38 @@
+<%= stylesheet_link_tag    "bootstrap" %>
+<%= javascript_include_tag :application %>
+
+<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post" target="_top">
+<input type="hidden" name="cmd" value="_s-xclick">
+<input type="hidden" name="on1" value="<%= current_client.email %>" maxlength="100">
+<input type="hidden" name="hosted_button_id" value="WCPKKSWQQ84RU">
+<input type="image" src="https://www.sandbox.paypal.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+<img alt="" border="0" src="https://www.sandbox.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1">
+</form>
+
+
+
+<div class="jumbotron">
+
+<div class="current_balance">Your balance is <%= current_client.balance %> credits</div>
+</br>
+<div style="color:#FF0000" class="purchase_reason"></div>
+</br>
+<div class="campaign_purchased"></div>
+</br>
+<%= link_to 'Add Credits', {:controller => :clients, :action => :add_money}, :class => 'add_money btn btn-primary' , :id => current_client.id %>
+
+</br>
+</br>
+<input type="text" class="<%= @campaign.id %>">
+</tr>
+</br>
+</br>
+<%= link_to 'Purchase this campaign', purchases_path, :class => 'after_campaign_purchase btn btn-primary', :confirm => 'Are you sure?' %>
+</br>
+</br>
+<%= link_to 'Finish', client_campaigns_path(current_client), :class => 'btn-lg btn-success' %>
+</br>
+</br>
+</br>
+<%= link_to 'Prev Step', campaigns_audience_path(:campaign_id => @campaign.id), :class => 'btn-lg btn-success' %>
+</div>

@@ -1,0 +1,55 @@
+
+<div class="jumbotron">
+
+<h2>Unapproved campaigns</h2>
+</br>
+
+</div>
+
+<% if current_client.admin %>
+
+<table class="table table-striped">
+
+<tr>
+    <td>question</td>
+    <td>approved</td>
+    <td>started</td>
+    <td>showed</td>
+    <td>purchased</td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+
+<% @campaigns.each do |c| %>
+  <tr>
+    <td class=<%="#{c.id}"%>><%= c.caption %></td>
+    <td><%= c.approved %></td>
+    <td><%= c.started %></td>
+    <td><%= c.showed %></td>
+    <td><%= c.purchased %></td>
+    <td> 
+    	<% c.campaign_items.each_with_index do |item,i| %>
+    		<b>#<%= i+1 %>:  </b>
+    		<%= item.textUrl %>
+    		</br>
+    	<% end %>
+    </td>
+    <td><%= link_to 'Show', client_campaign_path(current_client, c), :class => 'btn btn-primary' %></td>
+    <td><%= link_to 'Approve this campaign', campaign_approves_path(c, :path => campaigns_unapproved_path), :method => :post, :class => 'btn btn-success' %></td>
+  </tr>
+<% end %>
+</table>
+
+<div class="col-lg-6">
+
+</br>
+<%= link_to 'Profile', client_path(current_client), :class => "btn btn-primary" %>
+</br>
+
+</div>
+
+<% end %>
+
+<%= javascript_include_tag :application %>
+<%= stylesheet_link_tag "bootstrap" %>

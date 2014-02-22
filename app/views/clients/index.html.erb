@@ -1,0 +1,33 @@
+<%= javascript_include_tag :application %>
+<%= stylesheet_link_tag "bootstrap" %>
+
+<div class="jumbotron">
+
+<h2>Advertisers</h2>
+</br>
+
+</div>
+
+<% if current_client.admin %>
+
+	<table class="table table-striped">
+	<tr>
+		<th>Username</th>
+	    <th>Email</th>
+	    <td></td>
+	</tr>
+
+	<% @clients.each do |client| %>
+	  <tr>
+	  	<td><%= client.username %></td>
+	    <td><%= client.email %></td>
+	    <td><%= link_to 'Show details', client_profile_path(client, client.profile), :class => "btn btn-success" %></td>
+	  </tr>
+	<% end %>
+
+	</table>
+
+<% end %>
+
+
+<%= link_to 'Profile', client_path(current_client), :class => "btn btn-primary"  %>

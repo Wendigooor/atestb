@@ -1,0 +1,22 @@
+<%= stylesheet_link_tag "bootstrap" %>
+<%= javascript_include_tag :application %>
+
+<div class="jumbotron">
+
+<p>
+  <b>Select new campaign type:</b>
+  <p>
+    <%= link_to 'New Text Campaign', new_client_campaign_path(current_client, :type_ad => 0, :step => true), :class => 'btn btn-success' %>
+  </p>
+  <p>
+    <%= link_to 'New Image Campaign', new_client_campaign_path(current_client, :type_ad => 1, :step => true), :class => 'btn btn-success' %>
+  </p>
+</p>
+
+</br>
+<%= link_to 'My Campaigns', client_campaigns_path(current_client), :class => 'btn btn-primary' %>
+</br>
+</br>
+<%= link_to 'Profile', client_path(current_client), :class => "btn btn-primary" %>
+
+</div>

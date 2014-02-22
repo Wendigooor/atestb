@@ -1,0 +1,65 @@
+
+<div class="jumbotron">
+
+<h2>My campaigns</h2>
+</br>
+
+<div class="current_balance">Your balance is <%= current_client.balance %> credits</div>
+</br>
+<div style="color:#FF0000" class="purchase_reason">
+
+</div>
+
+</div>
+
+<table class="table table-striped">
+
+<tr>
+    <td>question</td>
+    <td>approved</td>
+    <td>started</td>
+    <td>purchased</td>
+    <td>showed</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+</tr>
+
+<% @campaigns.each do |c| %>
+  <tr>
+    <td class=<%="#{c.id}"%>><%= c.caption %></td>
+    <td class="appr"><%= c.approved %></td>
+    <td><%= c.started %></td>
+    <td><div class=<%="#{c.id}purchased"%>><%= c.purchased %></div></td>
+    <td><%= c.showed %></td>
+    <td><%= link_to 'Show', client_campaign_path(current_client, c), :class => 'btn btn-primary' %></td>
+    <td><%= link_to 'Edit', edit_client_campaign_path(current_client, c), :class => 'btn btn-success' %></td>
+    <td><%= link_to 'Delete', client_campaign_path(current_client, c), :method => :delete, :confirm => 'Are you sure?', :class => "btn btn-sm btn-danger" %></td>
+    <td>
+        <input type="text" class=<%="#{c.id}"%>>
+    </td>
+    <td>
+        <%= link_to 'Purchase this campaign', purchases_path, :class => 'purchase btn btn-primary', :confirm => 'Are you sure?' %>
+    </td>
+    <td>
+        <% if c.started %>
+            <%= link_to 'Pause this campaign', campaign_activates_path(c), :method => :post, :class => 'approve btn btn-success' %>
+        <% else %>
+            <%= link_to 'Start this campaign', campaign_activates_path(c), :method => :post, :class => 'approve btn btn-success' %>
+        <% end %>
+    </td>
+    <td>
+        <%= link_to 'Statistic', client_campaign_statistics_path(current_client,c), :class => 'btn btn-info' %>
+    </td>
+    <td>
+        <% if c.started && c.approved %>
+            <%= image_tag "icon_ok.png" %>
+        <% end %>
+    </td>
+  </tr>
+<% end %>
+</table>

@@ -1,0 +1,375 @@
+
+<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
+
+<%= stylesheet_link_tag 'preview' %>
+<%= stylesheet_link_tag 'jquery-ui-1.10.0.custom.min.css' %>
+<%= javascript_include_tag 'jquery_min' %>
+<%= javascript_include_tag 'jquery.ui.core.min.js' %>
+<%= javascript_include_tag 'jquery.ui.widget.min.js' %>
+<%= javascript_include_tag 'jquery.ui.tabs.min.js' %>
+<%= javascript_include_tag 'jquery.ui.timepicker.js' %>
+<%= javascript_include_tag :jquery_ui %>
+<%= javascript_include_tag :campaign_preview %>
+<%= javascript_include_tag :jscolor %>
+<%= javascript_include_tag :preimage %>
+
+<%= csrf_meta_tags %>
+<%= javascript_tag "var AUTH_TOKEN = '#{form_authenticity_token}';" if protect_against_forgery?%>
+
+<script type="text/javascript">
+  $(document).ready(function(){
+    var lat = 35.2475, 
+        lon = -100.8189,
+        map;
+    var mapOptions = {
+      zoom: 4,
+      center: new google.maps.LatLng(lat, lon)
+    };
+
+    map = new google.maps.Map(document.getElementById('map'),
+          mapOptions);
+
+    $('#address_btn').on('click', function() {
+      var url = "/campaign_location_points/coordinates";
+      var address = $('#address').val();
+      if (address == "")
+      {
+        
+      }
+
+      var latitude = $("#latitude");
+      var longitude = $("#longitude");
+
+      $.ajax({
+        type: "GET",
+        url: url,
+        data: { address : address },
+        dataType: "json",
+        success: function(data) {
+          //console.log(data)
+          if (data != null)
+          {
+            map.setCenter(new google.maps.LatLng( data[0], data[1] ) );
+            latitude.val(data[0]);
+            longitude.val(data[1]);
+            map.setZoom(14);
+          }
+          else
+          {
+            latitude.val(0.0);
+            longitude.val(0.0);
+          }
+        }
+      });
+    });
+
+    $("#distance").change(function () {                    
+      var newValue = $('#distance').val();
+      $("#distance_field").val(newValue);
+    });
+
+    $("#add_location_point").on('click', function() {
+      var url = "/campaign_location_points";
+      var campaign_id = $('#before_answers').attr('data-campaign-id');
+
+      var address = $('#address').val();
+      var latitude = $("#latitude").val();
+      var longitude = $("#longitude").val();
+      var distance = $("#distance").val();
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: { 
+          address : address,
+          campaign_id : campaign_id,
+          latitude : latitude,
+          longitude : longitude,
+          distance : distance,
+          authenticity_token: AUTH_TOKEN
+        },
+        dataType: "json",
+        success: function(data) {
+          $("#location_points").html(data.html);
+        }
+      });
+    });
+
+    $(document).on("click", "[id=\"remove_location_point\"]", function(event) {
+      var location_point_id = $(this).attr('data-location-point-id');
+      var url = '/campaign_location_points/' + location_point_id;
+
+      $.ajax({
+        type: "DELETE",
+        url: url,
+        data: {
+          authenticity_token: AUTH_TOKEN,
+          location_point_id : location_point_id
+        },
+        dataType: "json",
+        success: function(data) {
+          $("#location_points").html(data.html);
+        }
+      });
+    });
+
+  });
+</script>
+
+
+<div style="color:#FF0000" class="items_limit_error">
+  <%= flash[:notice]  %>
+</div>
+
+
+<br />
+<br />
+
+
+
+<%= form_for @campaign, :url => path, :html => {:multipart => true, :id => "edit_campaign_form"} do |f| %>
+
+  <% if current_client.admin? %>
+    <%= fields_for :client, @client do |client| %>
+      <b>Client</b><br />
+      <%= client.select :email, options_for_select(Client.where(:admin => false).where(:developer => false).map{ |c| c.email } ), :prompt => '' %>
+    <% end %>
+  <% end %>
+
+<br />
+<br />
+<br />
+
+  <% if @campaign.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@campaign.errors.count, "error") %> prohibited this campaign from being saved:</h2>
+
+      <ul>
+      <% @campaign.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <fieldset class="fieldset">
+    <%= f.label :question %><br />
+    <%= f.text_field :caption %><br />
+    <%= f.file_field :image, class: "file", onchange: "uploadFile(this);" %><br />
+    <img class="img" id="img" src="#" alt="my image" style="max-height: 250px; max-width: 250px; min-height: 20px; min-width: 20px;" />
+    </br>
+    <%= f.label :image_question_link %><br />
+    <%= f.text_field :image_question_link %><br />
+    </br>
+
+    <%= f.label :title_color %><br />
+    <%= f.text_field :title_color, :id => "campaign_title_color", :class => "color" %>
+
+    <%= f.label :border_color %><br />
+    <%= f.text_field :border_color, :id => "campaign_border_color", :class => "color" %>
+  </fieldset>
+
+  <fieldset class="fieldset">
+    <%= f.label :font %><br />
+    <%= f.select :font, options_for_select(Campaign::FONTS, @campaign.font) %><br />
+    </br>
+    <%= f.label :font_size %><br />
+    <%= f.select :font_size, options_for_select(20..30, @campaign.font_size) %><br />
+    </br>
+  </fieldset>
+
+  <fieldset class="fieldset">
+    <%= f.label :background_image %><br />
+    <%= f.file_field :background_image, class: "file", onchange: "uploadFile(this);" %><br />
+    <img class="img" id="img" src="#" alt="my image" style="max-height: 250px; max-width: 250px; min-height: 20px; min-width: 20px;" />
+    </br>
+    </br>
+  </fieldset>
+
+  <fieldset class="fieldset">
+    <b><%= f.label :target_device %></b>
+    <% Campaign::DEVICES.each do |device| %>
+      <%= f.radio_button :target_device, device.last, :checked => @campaign.target_device == device.last ? true : false %> <%= device.first %>
+    <% end %>
+  </fieldset>
+
+  <% if !params[:step] %>
+    <br />
+    <br />
+    <br />
+
+    <table border='1'>
+      <tr>
+        <th >Select campaign before</th>
+        <th >Campaign items</th>
+        <th >Selected answers before</th>
+      </tr>
+
+      <td>
+        <div id="before_campaigns_div">
+          <%= select_tag :before_campaigns, options_for_select( Campaign.where(:client_id => @campaign.client_id).where('id != ?', @campaign.id).collect { |k| ["#{k.caption}", k.id] } ), :include_blank => true %>
+        </div>
+      </td>
+      <td id="td_answers">
+        
+      </td>
+      <td id="td_before_answers">
+        
+      </td>
+    </table>
+
+    <br />
+    <br />
+    <br />
+
+    <select id='before_answers' multiple="multiple" style="display:none;" data-campaign-id='<%= @campaign.id %>'> </select>
+    <select id='before_answers_ids' name="campaign[update_before_answers][]" style="display:none;" multiple="multiple" data-campaign-id='<%= @campaign.id %>'> </select>
+
+  <% end %>
+
+  <% if !params[:step] %>
+    <fieldset class="fieldset">
+      <b>Age ranges:</b>
+      <br />
+      <% AgeRange.all.each do |age_range| %>
+        <%= check_box_tag :age_ranges, age_range.id, @campaign.age_ranges.include?(age_range), :name => 'campaign[age_range_ids][]' %>
+        <%= age_range.age_left %> - <%= age_range.age_right %>
+      <% end %>
+    </fieldset>
+  <% end %>
+
+  <fieldset class="fieldset">
+    <b><%= f.label :gender %></b>
+    <% Campaign::GENDERS.each do |gender| %>
+      <%= f.radio_button :gender, gender.last, :checked => @campaign.gender == gender.last ? true : false %> <%= gender.first %>
+    <% end %>
+  </fieldset>
+
+  <fieldset class="fieldset">
+    <b><%= f.label :multiple %></b>
+    <%= f.check_box :multiple %>
+  </fieldset>
+
+<% if !params[:step] %>
+  <fieldset class="fieldset">
+
+    <%= select_tag :day, options_for_select(Date::DAYNAMES), :id => "day" %>
+    <br />
+    From: <input type="text" id="start_time" style="width: 70px;", value=""> - To: <input type="text" id="end_time" style="width: 70px;", value="">
+    <input type="button" id="add_adv_period" class="btn btn-primary" style="width: 170px;" value="Add new period">
+    <br />
+
+    <b>Days scheduler:</b>
+    <br />
+    <% Date::DAYNAMES.each do |day| %>
+      <br />
+      <%= day %>
+      <br />
+      <div id="<%= day %>">
+        <%= render 'adv_periods/campaign_periods', :campaign => @campaign, :day => day %>
+      </div>
+    <% end %>
+  </fieldset>
+
+  <br />
+
+
+
+  <b>New point:</b>
+    <%= fields_for :campaign_location_point do |builder| %>
+    <%= builder.text_field :address, :id => "address", :placeholder => "Insert address" %>
+    <input type="button" id="address_btn" class="btn btn-primary" value="Find">
+    <%= builder.label :latitude %>
+    <%= builder.text_field :latitude, :id => "latitude", :readonly => true %>
+    <%= builder.label :longitude %>
+    <%= builder.text_field :longitude, :id => "longitude", :readonly => true %>
+    <%= builder.label :distance %> (in miles)
+    <%= builder.text_field :distance, :id => "distance_field", :readonly => true %>
+    <%= builder.range_field :distance, :min => 1, :max => 500, :id => "distance", :value => 1 %>
+  <% end %>  
+  <br />
+  <input type="button" id="add_location_point" class="btn btn-primary" style="width: 170px;" value="Add location point">
+  <br />
+  <div id="location_points" style='width: 800px;'>
+    <%= render 'campaign_location_points/points', :campaign => @campaign %>
+  </div>
+
+  <br />
+
+  <div style='width: 800px;'>
+    <div id="map" style='width: 800px; height: 400px;'></div>
+  </div>
+<% end %>
+
+  <br />
+
+  <% if !params[:step] %>
+
+    <button id="preview_button" class="btn btn-primary" type="button" data-type-ad='<%= @campaign.type_ad %>' data-items-count='<%= @campaign.campaign_items.count %>'
+      data-title-color='<%= @campaign.title_color %>' data-border-color='<%= @campaign.border_color %>' data-background-url='<%= @campaign.background_url %>'
+      data-font-size='<%= @campaign.font_size %>'> Show campaign preview </button>
+    
+    <div id="campaign_preview">
+
+      <div id="portrait_preview">
+        <div id="campaign_title"></div>
+
+        <div id="answers" >
+          <div id="answer" data-answer-id="0" ></div>
+          <div id="answer" data-answer-id="1" ></div>
+          <div id="answer" data-answer-id="2" ></div>
+          <div id="answer" data-answer-id="3" ></div>
+        </div>
+      </div>
+
+      <div id="landscape_preview">
+        <div id="campaign_title"></div>
+
+        <div id="answers_landscape" >
+          <div id="answer" data-answer-id="0" ></div>
+          <div id="answer" data-answer-id="1" ></div>
+          <div id="answer" data-answer-id="2" ></div>
+          <div id="answer" data-answer-id="3" ></div>
+        </div>
+      </div>
+
+    </div>
+
+  <% end %>
+
+  </br>
+
+  <h3> Answers </h3>
+
+  <% @campaign.campaign_items.each_with_index do |item, index| %>
+    <%= f.fields_for :campaign_items, item do |item|%>
+      <b>#<%= index+1 %></b>
+      <%= render "campaign_item", :f => item %>
+    <% end %>
+  <% end %>
+
+  </br>
+  </br>
+
+
+  <% if !params[:step] %>
+    <b>Locations:</b>
+    <button id="locations_button" class="btn btn-primary" type="button" > Show campaign locations </button>
+    <div id="locations">
+      <b><%= f.label :locations %></b>
+      <% Location.all.each do |location| %>
+        <%= check_box_tag :locations, location.id, !@campaign.locations.include?(location), :name => 'campaign[location_ids][]' -%>
+        <%= location.country %>  | <%= location.state if location.state != "" %>
+      <% end %>
+    </div>
+  <% end %>
+
+
+    <% if params[:step] %>
+        <%= hidden_field :step, :value => true %>
+    <% end %>
+
+    <div class="actions">
+      <%= f.submit %>
+    </div>
+<% end %>

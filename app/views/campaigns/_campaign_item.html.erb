@@ -1,0 +1,13 @@
+
+<fieldset class="fieldset">
+
+	<% if @campaign.type_ad == 0 %>
+		<%= f.text_field :textUrl, class: "text_url" %>
+	<% else %>
+		<%= f.hidden_field :textUrl, class: "text_url" %>
+		<%= f.file_field :image, class: "file", onchange: "uploadFile(this);" %>
+		<img class="img" id="img" src="#" alt="my image" style="max-height: 250px; max-width: 250px; min-height: 20px; min-width: 20px;" />
+	<% end %>
+    </br>
+
+</fieldset>

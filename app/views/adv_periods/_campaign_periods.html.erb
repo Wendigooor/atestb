@@ -1,0 +1,14 @@
+<% if @campaign.adv_periods.select { |period| period.day == day }.any? %>
+  Time ranges:
+  <% @campaign.adv_periods.select { |period| period.day == day }.each do |time_range| %>
+    <br />
+    <div style="display:inline-block;">
+      <%= Time.at(time_range.start).utc.strftime("%H:%M") %> - <%= Time.at(time_range.end).utc.strftime("%H:%M") %>
+    </div>
+    <div style="display:inline-block;">
+      <input type="button" id="remove_adv_period" value="&#10005;" style="width: 30px;" data-adv-period-id='<%= time_range.id %>' data-day='<%= day %>'>
+    </div>
+  <% end %>
+<% else %>
+  All day
+<% end %>

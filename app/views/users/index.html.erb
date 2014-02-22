@@ -1,0 +1,108 @@
+
+<%= stylesheet_link_tag "bootstrap" %>
+<%= javascript_include_tag :jquery_min %>
+<%= javascript_include_tag :jquery_ui %>
+<%= javascript_include_tag :users_page %>
+<%= stylesheet_link_tag "jquery_ui" %>
+
+<div class="jumbotron">
+
+<h2>All users</h2>
+</br>
+<br />
+<%= link_to 'Download Excel', excel_users_path(params: params ), :class => "btn btn-primary" %>
+<br />
+<%= link_to 'Download All Campaigns', excel_campaigns_path, :class => 'btn btn-primary' %>
+<br />
+
+</div>
+
+<% if current_client.admin %>
+
+<%= form_for :search, :url => users_path, :method => :get do |f| %>
+  Search by:
+  <%= f.label :age, 'Age ranges' %>:
+  <% AgeRange.all.each do |age_range| %>
+    <div style="display:inline-block;">
+      <%= check_box_tag :age_ranges, age_range.id, @age_ranges.include?(age_range), :name => 'search[age_range_ids][]' -%>
+    </div>
+    <div style="display:inline-block;">
+      <%= age_range.full_range %>
+    </div>
+  <% end %>
+  <br />
+  <%= f.label :sex, 'Sex' %>:
+  <%= f.select :sex, Campaign::GENDERS, :selected => (params[:search].present? ? params[:search][:sex] : 2)%>
+  <br />
+  From:
+  <%= f.text_field :datepicker_from, :id => 'datepicker_from', :value => @date_from %>
+  <br />
+  To:
+  <%= f.text_field :datepicker_to, :id => 'datepicker_to', :value => @date_to %>
+  <br />
+  <br />
+  Answer filter
+  From:
+  <%= f.text_field :answer_datepicker_from, :id => 'answer_datepicker_from', :value => @answer_date_from %>
+  <br />
+  To:
+  <%= f.text_field :answer_datepicker_to, :id => 'answer_datepicker_to', :value => @answer_date_to %>
+  <br />
+  <%= hidden_field_tag :sort, (params[:sort] if params[:sort].present?) %>
+  <%= hidden_field_tag :direction, (params[:direction] if params[:direction].present?) %>  
+  <%= f.submit :Search %>
+<% end %>
+
+<h2>
+  * Sort by column with search will work only if you first sort table by one of the column, and after that search by the form.
+</h2>
+
+
+<br/>
+
+<h4 style="text-indent:20px">Total users: <%= @users.count %></h4>
+
+
+<center><b><%= will_paginate @users %></b></center>
+<br />
+
+<table class="table stripped pretty" id="users_table">
+
+<tr>
+    <th><%= sortable "macaddress" %></th>
+    <th><%= sortable "age_range_id", "Age Range" %></th>
+    <th><%= sortable "sex" %></th>
+    <th><%= sortable "latitude" %></th>
+    <th><%= sortable "longitude" %></th>
+    <th><%= sortable "country", "location" %></th>
+    <th><%= sortable "clicks_count" %></th>
+</tr>
+
+
+<% @users.each do |user| %>
+  <tr>
+    <td><%= user.macaddress %></td>
+    <td>
+      <%= user.age_range.full_range %>
+    </td>
+    <td>
+      <% if user.sex %>
+        <%= Campaign::GENDERS[user.sex].first %>
+      <% end %>
+    </td>
+    <td><%= user.latitude %></td>
+    <td><%= user.longitude %></td>
+    <td>
+	<% if user.location %>
+	  <%= user.location.country %> | <%= user.location.state %>
+	<% end %>
+    </td>
+    <td><%= link_to "#{user.clicks_count}", user_path(user) %></td>
+  </tr>
+<% end %>
+
+</table>
+
+<%= link_to 'Profile', client_path(current_client), :class => "btn btn-primary" %>
+
+<% end %>
