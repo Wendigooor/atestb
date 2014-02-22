@@ -1,5 +1,5 @@
 class Sdkkey < ActiveRecord::Base
-  attr_accessible :key, :name, :clicks, :active, :placements_attributes, :sdkkey_placements_attributes
+  #attr_accessible :key, :name, :clicks, :active, :placements_attributes, :sdkkey_placements_attributes
 
   validates :name, :uniqueness => true
 

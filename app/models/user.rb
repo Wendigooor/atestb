@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :macaddress, :latitude, :longitude, :sex, :location_id, :build_version, :country, :age_range_id
+  #attr_accessible :macaddress, :latitude, :longitude, :sex, :location_id, :build_version, :country, :age_range_id
   has_many :clicks
   has_many :impressions
 

@@ -1,5 +1,5 @@
 class Location < ActiveRecord::Base
-  attr_accessible :country, :state, :user_id
+ # attr_accessible :country, :state, :user_id
   belongs_to :user
 
   has_many :campaign_locations

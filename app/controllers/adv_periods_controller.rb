@@ -22,4 +22,8 @@ class AdvPeriodsController < ApplicationController
 		render :json => { 'html' => render_to_string(:partial => "adv_periods/campaign_periods", :locals => { :campaign => @campaign, :day => day }) }
 	end
 
+	def adv_period_params
+		
+	end
+
 end

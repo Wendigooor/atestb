@@ -1,10 +1,13 @@
 class ClientsController < ApplicationController
-    before_filter :authenticate_client!
-    skip_before_filter :authenticate_client!, :only => :add_money
+	before_filter :authenticate_client!
 
 	def show
-		@client = params[:id] ? Client.find(params[:id]) : current_client
-		@campaigns = Campaign.where(:approved => false, :started => true)
+		@client = Client.find(params[:id])
+
+		respond_to do |format|
+			format.html
+			format.json { render json: @client }
+		end
 	end
 
 	def edit
@@ -17,44 +20,51 @@ class ClientsController < ApplicationController
 
 	def update
 		@client = Client.find(params[:id])
-		if @client == current_client
-			if @client.update_attributes(params[:client])
-				redirect_to client_path(current_client)
-			else
-				flash[:notice] = @campaign.errors.full_messages
-				puts @campaign.errors.full_messages
-				redirect_to edit_client_path(current_client)
-			end
+		if @client.update_attributes(client_params)
+			redirect_to client_path(current_client)
 		else
-			client_path(current_client)
-		end
-	end
-
-	def add_money
-		client = Client.find(params[:client_id])
-		client.balance += 1000
-		if client.save
-			render :json => { :status => :ok, :balance => client.balance }
-		else
-			render :json => { :status => :balance_problem, :balance => client.balance }
+			flash[:notice] = @campaign.errors.full_messages
+			redirect_to edit_client_path(current_client)
 		end
 	end
 
 	def destroy
-		new_client_session_path
+		@client = Client.find(params[:id])
+		@client.destroy
+
+		respond_to do |format|
+			format.html { redirect_to new_client_session_path }
+			format.json { render json: json_wrapper(@client) }
+		end
 	end
 
 	def new
-		puts params
 		@client = Client.new
+
+		respond_to do |format|
+			format.html
+			format.json { render json: @client }
+		end
 	end
 
 	def create
-		if current_client.admin
-			@client = Client.create!(:username => params[:username], :email => params[:email], :password => params[:password], :password_confirmation => params[:password])
-		end
+		@client = Client.create(client_params)
 
-		redirect_to client_path(current_client)
+		respond_to do |format|
+			if @client.save
+				format.html { redirect_to client_path(@client), notice: "Client #{@client.name} was successfully created." }
+				format.json { render json: @client, status: :created, location: @client }
+			else
+				format.html { render action: "new" }
+				format.json { render json: @client.errors, status: :unprocessable_entity }
+			end
+		end
+	end
+
+	private
+
+	def client_params
+		params.require(:client).permit(:email, :password, :password_confirmation, :username, :developer)
 	end
 
 end

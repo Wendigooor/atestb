@@ -1,0 +1,29 @@
+development:
+  adapter: postgresql
+  encoding: utf8
+  reconnect: false
+  database: atestb_development
+  pool: 5
+  username: 
+  password: 
+  host: localhost
+
+test:
+  adapter: postgresql
+  encoding: utf8
+  reconnect: false
+  database: atestb_test
+  pool: 5
+  username: 
+  password: 
+  host: localhost
+
+production:
+  adapter: postgresql
+  encoding: utf8
+  reconnect: false
+  database: atestb_production
+  pool: 5
+  username: 
+  password: 
+  host: localhost

@@ -1,3 +1,3 @@
 class CampaignStat < ActiveRecord::Base
-   attr_accessible :click
+  # attr_accessible :click
 end

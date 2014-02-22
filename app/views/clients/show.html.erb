@@ -60,14 +60,7 @@
 <% end %>
 
 <% unless current_client.admin or current_client.developer %>
-	</br>
-	<%= link_to 'Add Credits', {:controller => :clients, :action => :add_money}, :class => 'add_money btn btn-primary', :id => current_client.id %>
-    </br>
-    </br>
-	<%= link_to 'My Campaigns', client_campaigns_path(current_client), :class => 'btn btn-primary' %>
-    </br>
-    </br>
-    <%= link_to 'New Campaign', campaigns_select_type_path, :class => 'btn btn-primary' %>
+	<%= link_to 'My Campaigns', client_campaigns_path(current_client), :class => 'btn btn-primary btn-sml' %>
 <% end %>
     </br>
     </br>

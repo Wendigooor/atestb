@@ -4,16 +4,16 @@ class Campaign < ActiveRecord::Base
 
   require 'securerandom'
 
-  attr_accessible :caption, :campaign_items_attributes, :type, :purchased, :showed, :approved, :image_url,
-    :title_color, :border_color, :background_url, :image_question_link, :target_device, :font, :font_size, :campaign_before_id, :campaign_age_ranges_attributes,
-    :gender, :multiple, :locations, :campaign_locations, :location_ids, :age_range_ids, :before_answers, :update_before_answers, :campaign_location_points_attributes, :static_key
+  # attr_accessible :caption, :campaign_items_attributes, :type, :purchased, :showed, :approved, :image_url,
+  #   :title_color, :border_color, :background_url, :image_question_link, :target_device, :font, :font_size, :campaign_before_id, :campaign_age_ranges_attributes,
+  #   :gender, :multiple, :locations, :campaign_locations, :location_ids, :age_range_ids, :before_answers, :update_before_answers, :campaign_location_points_attributes, :static_key
 
   attr_accessor :image
-  attr_accessible :image
+ # attr_accessible :image
   before_save :set_image_url, if: -> { self.image.present? }
 
   attr_accessor :background_image
-  attr_accessible :background_image
+ # attr_accessible :background_image
   before_save :set_background_url, if: -> { self.background_image.present? }
 
   belongs_to :client
