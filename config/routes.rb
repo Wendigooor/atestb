@@ -1,7 +1,7 @@
 App::Application.routes.draw do
   get "about/index"
 
-  devise_for :clients, :controllers => { :registrations => "registrations" }
+  devise_for :clients
     
   root :to => "pages#home"
 

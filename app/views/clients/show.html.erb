@@ -1,71 +1,12 @@
 
-<%= javascript_include_tag :application %>
-<%= stylesheet_link_tag "bootstrap" %>
-
-<div class="container">
-
-<div class="jumbotron">
-
-<%= flash[:notice] %>
-
-</br>
-
-<h1>Welcome <%= @client.username %></h1>
-
-<% unless current_client.admin or current_client.developer %>
-	</br>
-	<div class="current_balance">Your balance is  <%= current_client.balance %> credits</div>
-<% end %>
+<h1>Welcome, <%= @client.username %></h1>
 
 <% if current_client.admin or current_client.developer %>
-	</br>
-	<%= link_to 'Sdk keys' , client_sdkkeys_path(current_client), :class => 'btn btn-primary' %>
-	</br>
+</br>
+<%= link_to 'Sdk keys' , client_sdkkeys_path(current_client), :class => 'btn btn-primary' %>
+</br>
 <% end %>
 
-<% if current_client.admin %>
-	</br>
-	You are admin.
-	</br>
-	<%= link_to 'Unapproved campaings (' + @campaigns.count.to_s + ')' , {:controller => :campaigns, :action => :unapproved}, :class => 'btn btn-primary' %>
-	</br>	
-	</br>
-	<%= link_to 'All Campaigns', client_campaigns_path(current_client), :class => 'btn btn-primary' %>
-	</br>
-	</br>
-	<%= link_to 'All Users', users_path, :class => 'btn btn-primary' %>
-	</br>
-	</br>
-	<%= link_to 'All Developers', developers_path, :class => 'btn btn-primary' %>
-	</br>
-	</br>
-	<%= link_to 'All Advertisers', clients_path, :class => 'btn btn-primary' %>
-	</br>
-	</br>
-	<%= link_to 'Settings', clients_settings_path, :class => 'btn btn-primary' %>
-	</br>
-	</br>
-    <%= link_to 'New Campaign', campaigns_select_type_path, :class => 'btn btn-primary' %>
-	</br>
-    </br>
-    <%= link_to 'New Client', new_client_path, :class => 'btn btn-primary' %>
-	</br>
-    </br>
-    <%= link_to 'Global Statistic', global_statistic_statistics_path, :class => 'btn btn-primary' %>
-	</br>
-    </br>
-    <%= link_to 'Users clicks statistics', user_campaign_clicks_statistic_statistics_path, :class => 'btn btn-primary' %>
-    </br>
-    </br>
-<% end %>
-
-<% unless current_client.admin or current_client.developer %>
-	<%= link_to 'My Campaigns', client_campaigns_path(current_client), :class => 'btn btn-primary btn-sml' %>
-<% end %>
-    </br>
-    </br>
+<%= link_to 'My Campaigns', client_campaigns_path(current_client), :class => 'btn btn-primary btn-sml' %>
+</br>
 <%= link_to 'Logout', destroy_client_session_path, :class => 'btn btn-danger' %>
-
-</div>
-
-</div>
