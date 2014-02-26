@@ -21,9 +21,9 @@ App::Application.routes.draw do
   end
 
   resources :campaigns do
-    resources :locations
-    resources :approves
-    resources :activates
+    # resources :locations
+    # resources :approves
+    # resources :activates
 
     get :campaign_items
     get :before_answers
@@ -35,19 +35,19 @@ App::Application.routes.draw do
     end
   end
 
-  resources :campaign_location_points do
-    collection do
-      get :coordinates
-    end
-  end
+  # resources :campaign_location_points do
+  #   collection do
+  #     get :coordinates
+  #   end
+  # end
 
-  resources :adv_periods
+  # resources :adv_periods
 
-  resources :purchases do
-    collection do
-      post :minimal_purchase
-    end
-  end
+  # resources :purchases do
+  #   collection do
+  #     post :minimal_purchase
+  #   end
+  # end
 
   resources :users do
     collection do
@@ -56,24 +56,24 @@ App::Application.routes.draw do
     end
   end
   
-  resources :developers
+  # resources :developers
 
-  resources :statistics do
-    collection do
-      get :global_statistic
-      get :user_campaign_clicks_statistic
-    end
-  end
+  # resources :statistics do
+  #   collection do
+  #     get :global_statistic
+  #     get :user_campaign_clicks_statistic
+  #   end
+  # end
 
-  resources :sdkkeys do
-    collection do
-      get :activate
-      get :update_placements
-    end
-  end
+  # resources :sdkkeys do
+  #   collection do
+  #     get :activate
+  #     get :update_placements
+  #   end
+  # end
 
   resources :clients do
-    resources :profiles
+    resources :profiles, only: [:show, :edit, :update]
     resources :campaigns do
       resources :statistics do
         collection do

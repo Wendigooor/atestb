@@ -1,34 +1,19 @@
 
-<%= javascript_include_tag :application %>
-<%= stylesheet_link_tag "bootstrap" %>
+<p>
+  Username: <%= @client.username %>
+</p>
+<p>
+  Company: <%= @profile.company %>
+</p>
+<p>
+  Name: <%= @profile.name %>
+</p>
+<p>
+  Address: <%= @profile.address %>
+</p>
+<p>
+  Description:  <%= @profile.description %>
+</p>
 
-<div class="jumbotron">
-
-	<h4>Advertiser: <%= @client.username %> </h4>
-
-</div>
-
-<%= form_for @profile, url: client_profile_path(@client, @profile), :method => :put do |f| %>
-  <%= label_tag(:q, "Company:") %>
-  <%= f.text_field :company %>
-  </br>
-  <%= label_tag(:q, "Name:") %>
-  <%= f.text_field :name %>
-  </br>
-  <%= label_tag(:q, "Address:") %>
-  <%= f.text_field :address %>
-  </br>
-  <%= label_tag(:q, "Description:") %>
-  <%= f.text_area :description, size: "42x12" %>
-  </br>
-  </br>
-  <%= f.submit "Update" , :class => "btn btn-success"%>
-  </br>
-  
-<% end %>
-
-</br>
-
-<%= link_to 'All advertisers', clients_path, :class => "btn btn-primary"  %>
-</br>
-<%= link_to 'Profile', client_path(current_client), :class => "btn btn-primary"  %>
+<%= link_to 'Edit profile', edit_client_profile_path(current_client, current_client.profile), :class => "btn btn-primary"  %>
+<%= link_to 'Back', client_path(current_client), :class => "btn btn-primary"  %>

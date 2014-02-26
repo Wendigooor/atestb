@@ -24,9 +24,10 @@ body {
 .wrapper {height: auto;}
 .content_holder {
 	width: 1080;
-	height: auto;
-	margin: 0 auto;
+	min-height: 300;
+	margin: 30 auto;
 	position: relative;
+	padding:25px;
 	box-shadow: 0px 3px 15px #444;}
 	
 .menu {

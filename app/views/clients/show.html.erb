@@ -2,11 +2,9 @@
 <h1>Welcome, <%= @client.username %></h1>
 
 <% if current_client.admin or current_client.developer %>
-</br>
-<%= link_to 'Sdk keys' , client_sdkkeys_path(current_client), :class => 'btn btn-primary' %>
-</br>
+	<%= link_to 'Sdk keys' , client_sdkkeys_path(current_client), :class => 'btn btn-primary' %>
 <% end %>
 
-<%= link_to 'My Campaigns', client_campaigns_path(current_client), :class => 'btn btn-primary btn-sml' %>
-</br>
+<%= link_to 'My Campaigns', client_campaigns_path(current_client), :class => 'btn btn-primary' %>
+<%= link_to 'Profile', client_profile_path(current_client, current_client.profile), :class => 'btn btn-primary' %>
 <%= link_to 'Logout', destroy_client_session_path, :class => 'btn btn-danger' %>
