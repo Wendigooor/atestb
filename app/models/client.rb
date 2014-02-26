@@ -2,9 +2,9 @@ class Client < ActiveRecord::Base
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :validatable
 
-  has_many :campaigns
-  has_many :sdkkeys
-  has_one :profile
+  has_many :campaigns, :dependent => :delete_all
+  has_many :sdkkeys, :dependent => :delete_all
+  has_one :profile, :dependent => :delete
 
   validates_length_of :username, :minimum => 3, :maximum => 15
 

@@ -1,7 +1,7 @@
 class ProfilesController < ApplicationController
-
+	before_filter :find_client
+	
 	def show
-		@client = Client.find(params[:client_id])
 		@profile = @client.profile
 
 		respond_to do |format|
@@ -11,17 +11,10 @@ class ProfilesController < ApplicationController
 	end
 
 	def edit
-		@client = Client.find(params[:client_id])
 		@profile = @client.profile
-
-		respond_to do |format|
-			format.html
-			format.json { render json: @profile }
-		end
 	end
 
 	def update
-		@client = Client.find(params[:client_id])
 		@profile = @client.profile
 
 		if @profile.update_attributes(profile_params)
@@ -37,4 +30,9 @@ class ProfilesController < ApplicationController
 	def profile_params
 		params.require(:profile).permit(:description, :company, :name, :address)
 	end
+
+	def find_client
+		@client = Client.find(params[:client_id])
+	end
+
 end

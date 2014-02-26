@@ -1,9 +1,8 @@
 class ClientsController < ApplicationController
 	before_filter :authenticate_client!
+	before_filter :find_client, only: [:show, :edit, :update, :destroy]
 
 	def show
-		@client = Client.find(params[:id])
-
 		respond_to do |format|
 			format.html
 			format.json { render json: @client }
@@ -11,7 +10,6 @@ class ClientsController < ApplicationController
 	end
 
 	def edit
-		@client = Client.find(params[:id])
 	end
 
 	def index
@@ -19,7 +17,6 @@ class ClientsController < ApplicationController
 	end
 
 	def update
-		@client = Client.find(params[:id])
 		if @client.update_attributes(client_params)
 			redirect_to client_path(current_client)
 		else
@@ -29,7 +26,6 @@ class ClientsController < ApplicationController
 	end
 
 	def destroy
-		@client = Client.find(params[:id])
 		@client.destroy
 
 		respond_to do |format|
@@ -65,6 +61,10 @@ class ClientsController < ApplicationController
 
 	def client_params
 		params.require(:client).permit(:email, :password, :password_confirmation, :username, :developer)
+	end
+
+	def find_client
+		@client = Client.find(params[:id])
 	end
 
 end
