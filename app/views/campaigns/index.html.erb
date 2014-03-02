@@ -6,6 +6,6 @@
 	<%= render 'campaigns' %>
 </div>
 
-<br />
+<%= link_to 'New Campaign', new_client_campaign_path(current_client), :class => 'btn btn-primary btn-sml' %>
 <%= link_to 'Profile', client_path(current_client), :class => 'btn btn-primary btn-sml' %>
 <%= link_to 'Logout', destroy_client_session_path, :class => 'btn btn-danger btn-sml' %>

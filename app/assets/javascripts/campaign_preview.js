@@ -49,30 +49,10 @@ $(document).ready(function(){
 
 			for (i = 0; i < correct_answers; i++)
 			{
-				text_url = $("#campaign_campaign_items_attributes_" + i + "_textUrl").val();
+				content = $("#campaign_campaign_items_attributes_" + i + "_content").val();
 
-				if (type_ad == 0)
-				{
-					$(answers[i]).text(text_url);
-
-					$(answers_landscape[i]).text(text_url);
-				}
-				else
-				{
-					$(answers[i]).css("background-image", "url( /images/" + text_url + " )" );
-					$(answers[i]).css("background-repeat", "no-repeat" );
-					$(answers[i]).css("background-position", "center" );
-					$(answers[i]).css("-webkit-background-size", "100% auto" );
-					$(answers[i]).css("-moz-background-size", "100% auto" );
-					$(answers[i]).css("background-size", "contain" );
-
-					$(answers_landscape[i]).css("background-image", "url( /images/" + text_url + " )" );
-					$(answers_landscape[i]).css("background-repeat", "no-repeat" );
-					$(answers_landscape[i]).css("background-position", "center" );
-					$(answers_landscape[i]).css("-webkit-background-size", "100% auto" );
-					$(answers_landscape[i]).css("-moz-background-size", "100% auto" );
-					$(answers_landscape[i]).css("background-size", "contain" );
-				}
+				$(answers[i]).text(content);
+				$(answers_landscape[i]).text(content);
 
 				var border_color = $('#campaign_border_color').val();
 				$(answers[i]).css('border-color', border_color);
@@ -108,149 +88,6 @@ $(document).ready(function(){
 		}
 	});
 
-
-
-
-	$("#before_campaigns").change(function(event) {
-		event.preventDefault();
-		var campaign_id = $(this).children("option").filter(":selected").val();
-	 	var items_url = "/campaigns/" + campaign_id + "/campaign_items";
-	 	var td_answers = $("#td_answers").html('')
-
-		table = $("<table>")
-
-		$.ajax({
-			type: "GET",
-			url: items_url,
-			dataType: "json",
-			success: function(data) {
-				$(data).each(function(i, el) {
-					var checked = false;
-					var value = el[0];
-					$('#before_answers_ids option').each(function(){
-						if (this.value == value || value == "") {
-							checked = true;
-							return false;
-						}
-					});
-
-					tr = $("<tr>")
-					td = $("<td>")
-					td.append($("<input type=\"checkbox\" id=\"campaign_answer\" style='width:15px'>").attr('value', el[0]).attr('checked', checked).text(el[1]));
-					td_answer = $("<td>")
-					td_answer.append(el[1]);
-
-
-					tr.append(td)
-					tr.append(td_answer)
-					table.append(tr)
-				});
-			}
-		});
-
-		td_answers.html(table);
-	});
-
-	var s_ids = $('#before_answers_ids')
-
-	$(document).on("change", "[id=\"campaign_answer\"]", function(event) {
-
-		$("[id=\"campaign_answer\"]").each(function() {
-			var value = this.value;
-			var exists = false;
-
-			if ( this.checked )
-			{
-				$('#before_answers_ids option').each(function(){
-					if (this.value == value || value == "") {
-						exists = true;
-						return false;
-					}
-				});
-
-				if (!exists && !(value == ""))
-				{
-					s_ids.append(new Option( value ) );
-				}
-			}
-			else
-			{
-				$('#before_answers_ids option').each(function(){
-					if (this.value == value || value == "") {
-						exists = true;
-						this.remove();
-						return false;
-					}
-				});
-			}
-		});
-
-		s_ids.trigger( "change" );
-	});
-
-	$( "#edit_campaign_form" ).submit(function( event ) {
-		$('#before_answers_ids').append($("<option>").attr('value', 0).text(0));
-		$('#before_answers_ids option').each(function(){
-			this.selected = true;
-		});
-	});
-
-	var campaign_id = $('#before_answers').attr('data-campaign-id');
-	if (campaign_id != undefined)
-	{
-		var before_answers_url = "/campaigns/" + campaign_id + "/before_answers"
-	}
-
-	update_before_answers();
-
-	function update_before_answers()
-	{
-		$('#before_answers_ids option').each(function(){
-			this.remove();
-		});
-
-		$.ajax({
-			type: "GET",
-			url: before_answers_url,
-			dataType: "json",
-			success: function(data) {
-				console.log(data)
-				$(data).each(function(i, el) {
-					$('#before_answers_ids').append($("<option>").attr('value', el[0]).text(el[1]));
-				});
-				s_ids.trigger( "change" );
-			}
-		});
-	}
-
-	$('#before_answers_ids').change( function() {
-		var answers_ids = [];
-		$("#before_answers_ids option").each(function() {
-			answers_ids.push(this.value);
-		});
-
-		var url = "/campaigns/" + campaign_id + "/before_answers_table";
-
-		$.ajax({
-			type: "GET",
-			url: url,
-			data: { answers_ids : answers_ids },
-			dataType: "json",
-			success: function(data) {
-				$('#td_before_answers').html(data.html)
-			}
-		});
-	});
-
-
-
-
-	$( "#datepicker_from" ).datepicker({ dateFormat: 'yy-mm-dd' });
-	$( "#datepicker_to" ).datepicker({ dateFormat: 'yy-mm-dd' });
-
-
-
-
 	$('#search_campaign').on('input', function() {
 		var url = '/campaigns/search';
 		var campaign_id = $(this).val();
@@ -270,14 +107,12 @@ $(document).ready(function(){
 		});
 	});
 
-
-
-
 	$('#add_adv_period').click(function(){
 		var url = '/adv_periods';
 		var start_time = ($('#start_time').timepicker('getHour') * 60 + $('#start_time').timepicker('getMinute')) * 60;
 		var end_time = ($('#end_time').timepicker('getHour') * 60 + $('#end_time').timepicker('getMinute')) * 60;
 		var day = $('#day').find(":selected").text();
+		alert(url + " " + start_time + " " + end_time + " " + day + " " + AUTH_TOKEN)
 
 		$.ajax({
 			type: "POST",
@@ -354,21 +189,101 @@ $(document).ready(function(){
 	$('#end_time').timepicker('setTime', nowTime);
 
 
-	$(document).on("click", "[id=\"remove_campaign_before\"]", function(event) {
-		var url = '/campaigns/' + campaign_id + '/remove_campaign_before';
-		var campaign_before_remove_id = $(this).attr('data-campaign-before-remove-id');
+	// map
 
-		$.ajax({
-			type: "GET",
-			url: url,
-			data: { campaign_before_remove_id : campaign_before_remove_id },
-			dataType: "json",
-			success: function(data) {
-				$('#td_before_answers').html(data.html)
-				update_before_answers();
-				$("#before_campaigns").trigger("change")
-			}
-		});
-	});
+	var lat = 35.2475, 
+        lon = -100.8189,
+        map;
+    var mapOptions = {
+      zoom: 4,
+      center: new google.maps.LatLng(lat, lon)
+    };
+
+    map = new google.maps.Map(document.getElementById('map'),
+          mapOptions);
+
+    $('#address_btn').on('click', function() {
+      var url = "/campaign_location_points/coordinates";
+      var address = $('#address').val();
+      if (address == "")
+      {
+        
+      }
+
+      var latitude = $("#latitude");
+      var longitude = $("#longitude");
+
+      $.ajax({
+        type: "GET",
+        url: url,
+        data: { address : address },
+        dataType: "json",
+        success: function(data) {
+          if (data != null)
+          {
+            map.setCenter(new google.maps.LatLng(data[0], data[1]));
+            latitude.val(data[0]);
+            longitude.val(data[1]);
+            map.setZoom(14);
+          }
+          else
+          {
+            latitude.val(0.0);
+            longitude.val(0.0);
+          }
+        }
+      });
+    });
+
+    $("#distance").change(function () {                    
+      var newValue = $('#distance').val();
+      $("#distance_field").val(newValue);
+    });
+
+    $("#add_location_point").on('click', function() {
+      var url = "/campaign_location_points";
+      var campaign_id = $('#before_answers').attr('data-campaign-id');
+
+      var address = $('#address').val();
+      var latitude = $("#latitude").val();
+      var longitude = $("#longitude").val();
+      var distance = $("#distance").val();
+
+      $.ajax({
+        type: "POST",
+        url: url,
+        data: { 
+          address : address,
+          campaign_id : campaign_id,
+          latitude : latitude,
+          longitude : longitude,
+          distance : distance,
+          authenticity_token: AUTH_TOKEN
+        },
+        dataType: "json",
+        success: function(data) {
+          $("#location_points").html(data.html);
+        }
+      });
+    });
+
+    $(document).on("click", "[id=\"remove_location_point\"]", function(event) {
+      var location_point_id = $(this).attr('data-location-point-id');
+      var url = '/campaign_location_points/' + location_point_id;
+
+      $.ajax({
+        type: "DELETE",
+        url: url,
+        data: {
+          authenticity_token: AUTH_TOKEN,
+          location_point_id : location_point_id
+        },
+        dataType: "json",
+        success: function(data) {
+          $("#location_points").html(data.html);
+        }
+      });
+    });
+
 
 });

@@ -5,7 +5,7 @@ App::Application.routes.draw do
     
   root :to => "pages#home"
 
-  #get 'clients/settings' #!!!
+  get 'clients/settings'
 
   resources :rest do
     collection do
@@ -21,33 +21,29 @@ App::Application.routes.draw do
   end
 
   resources :campaigns do
-    # resources :locations
-    # resources :approves
-    # resources :activates
+    resources :locations
+    resources :approves
+    resources :activates
 
-    get :campaign_items
-    get :before_answers
-    get :before_answers_table
-    get :remove_campaign_before
     collection do
       get :excel
       get :search
     end
   end
 
-  # resources :campaign_location_points do
-  #   collection do
-  #     get :coordinates
-  #   end
-  # end
+  resources :campaign_location_points do
+    collection do
+      get :coordinates
+    end
+  end
 
-  # resources :adv_periods
+  resources :adv_periods
 
-  # resources :purchases do
-  #   collection do
-  #     post :minimal_purchase
-  #   end
-  # end
+  resources :purchases do
+    collection do
+      post :minimal_purchase
+    end
+  end
 
   resources :users do
     collection do
@@ -58,13 +54,6 @@ App::Application.routes.draw do
   
   # resources :developers
 
-  # resources :statistics do
-  #   collection do
-  #     get :global_statistic
-  #     get :user_campaign_clicks_statistic
-  #   end
-  # end
-
   # resources :sdkkeys do
   #   collection do
   #     get :activate
@@ -74,14 +63,7 @@ App::Application.routes.draw do
 
   resources :clients do
     resources :profiles, only: [:show, :edit, :update]
-    resources :campaigns do
-      resources :statistics do
-        collection do
-          get :answered_users
-          get :excel
-         end
-      end
-    end
+    resources :campaigns
     resources :sdkkeys
   end
 

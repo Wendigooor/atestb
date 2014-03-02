@@ -48,8 +48,8 @@ class ClientsController < ApplicationController
 
 		respond_to do |format|
 			if @client.save
-				format.html { redirect_to client_path(@client), notice: "Client #{@client.name} was successfully created." }
-				format.json { render json: @client, status: :created, location: @client }
+				format.html { redirect_to client_path(current_client), notice: "Client #{@client.name} was successfully created." }
+				format.json { render json: @client, status: :created, location: current_client }
 			else
 				format.html { render action: "new" }
 				format.json { render json: @client.errors, status: :unprocessable_entity }

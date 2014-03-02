@@ -1,12 +1,5 @@
 
-<div class="jumbotron">
-
-<h2>All campaigns</h2>
-</br>
-
-</div>
-
-<table class="table table-striped">
+<table>
 
 <tr>
     <td>id</td>
@@ -23,13 +16,11 @@
     <td></td>
     <td></td>
     <td></td>
-    <td></td>
-    <td></td>
 </tr>
 
-<% @all_campaigns.each do |c| %>
+<% @campaigns.each do |c| %>
   <tr>
-    <td style="min-width:100px"># <%= c.id %></td>
+    <td># <%= c.id %></td>
     <td class=<%="#{c.id}"%>><%= c.client.username %></td>
     <td><%= c.caption %></td>
     <td><%= c.approved %></td>
@@ -41,14 +32,7 @@
     <td><%= link_to 'Edit', edit_client_campaign_path(current_client, c), :class => 'btn btn-success' %></td>
     <td><%= link_to 'Purchase this campaign', purchases_path, :class => 'purchase btn btn-primary', :confirm => 'Are you sure?' %></td>
     <td><%= link_to 'Show', client_campaign_path(current_client, c), :class => 'btn btn-primary' %></td>
-    <td><%= link_to 'Statistic', client_campaign_statistics_path(c.client, c), :class => 'btn btn-info' %></td>
-    <td>
-        <% if c.started %>
-            <%= link_to 'Pause', campaign_activates_path(c), :method => :post, :class => 'btn btn-sm btn-success' %>
-        <% else %>
-            <%= link_to 'Start', campaign_activates_path(c), :method => :post, :class => 'btn btn-sm btn-success' %>
-        <% end %>
-    </td>
+    <td><%= link_to c.started ? 'Pause' : 'Start', campaign_activates_path(c), :method => :post, :class => 'btn btn-sm btn-success' %></td>
     <td>
         <% if c.started && c.approved %>
             <%= link_to 'Unapprove', campaign_approves_path(c, :path => client_campaigns_path(current_client)), :method => :post, :class => 'btn btn-sm btn-danger' %>
@@ -61,15 +45,6 @@
     </td>
   </tr>
 <% end %>
-
-  <tr>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td>Total:</td>
-    <td><%= @purchased_sum %></td>
-    <td><%= @showed_sum %></td>
-  </tr>
 
 </table>
 
