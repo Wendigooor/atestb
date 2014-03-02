@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.0.0'
 
+
 gem 'pg'
 gem 'devise'
 gem 'rails-settings-cached', '0.3.1'
@@ -29,6 +30,10 @@ group :development do
   gem 'webrick', '~> 1.3.1'
   gem 'better_errors'
   gem 'binding_of_caller'
+end
+
+group :production do
+  gem 'rails_12factor'
 end
 
 # To use ActiveModel has_secure_password
