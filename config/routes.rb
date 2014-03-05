@@ -42,6 +42,7 @@ App::Application.routes.draw do
   resources :purchases do
     collection do
       post :minimal_purchase
+      post :add_credits
     end
   end
 

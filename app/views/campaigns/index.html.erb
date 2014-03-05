@@ -1,10 +1,16 @@
 
+Current credits: 
+<div id="current_balance">
+	Your balance is <%= current_client.balance %> credits
+</div>
 
 <b><h2>Search by campaign id or caption</h2></b>
 <input id="search_campaign"></input>
 <div id='campaigns'>
 	<%= render 'campaigns' %>
 </div>
+
+<%= link_to 'Add some credits', add_credits_purchases_path, :class => 'btn btn-primary btn-sml add_credits', :id => current_client.id %>
 
 <%= link_to 'New Campaign', new_client_campaign_path(current_client), :class => 'btn btn-primary btn-sml' %>
 <%= link_to 'Profile', client_path(current_client), :class => 'btn btn-primary btn-sml' %>

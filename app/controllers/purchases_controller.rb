@@ -24,7 +24,13 @@ class PurchasesController < ActionController::Base
 		else
 			render :json => { :status => :not_ok, :balance => "<Undefined>", :reason => "Sorry, we have temporary problems. Please, try again later." }
 		end
+	end
 
+	def add_credits
+		@client = Client.find(params[:client_id])
+		@client.balance += params[:credits].to_f
+		@client.save
+		render :json => { :status => :ok, :balance => @client.balance }
 	end
 
 end

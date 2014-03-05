@@ -5,6 +5,13 @@
 	<%= link_to 'Sdk keys' , client_sdkkeys_path(current_client), :class => 'btn btn-primary' %>
 <% end %>
 
+Current credits: 
+<div id="current_balance">
+	<%= current_client.balance %>
+</div>
+
+<%= link_to 'Add some credits', add_credits_purchases_path, :class => 'btn btn-primary btn-sml add_credits', :id => current_client.id %>
+
 <%= link_to 'My Campaigns', client_campaigns_path(current_client), :class => 'btn btn-primary' %>
 <%= link_to 'Profile', client_profile_path(current_client, current_client.profile), :class => 'btn btn-primary' %>
 <%= link_to 'Logout', destroy_client_session_path, :class => 'btn btn-danger' %>

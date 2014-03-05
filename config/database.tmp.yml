@@ -4,8 +4,8 @@ development:
   reconnect: false
   database: atestb_development
   pool: 5
-  username: 
-  password: 
+  username: wendigo
+  password: gfhjkmkeyfnbr
   host: localhost
 
 test:
@@ -14,8 +14,8 @@ test:
   reconnect: false
   database: atestb_test
   pool: 5
-  username: 
-  password: 
+  username: wendigo
+  password: gfhjkmkeyfnbr
   host: localhost
 
 production:
@@ -24,6 +24,6 @@ production:
   reconnect: false
   database: atestb_production
   pool: 5
-  username: 
-  password: 
+  username: wendigo
+  password: gfhjkmkeyfnbr
   host: localhost
