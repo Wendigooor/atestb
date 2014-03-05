@@ -5,8 +5,6 @@ App::Application.routes.draw do
     
   root :to => "pages#home"
 
-  get 'clients/settings'
-
   resources :rest do
     collection do
       get  :fetch
@@ -66,6 +64,9 @@ App::Application.routes.draw do
     resources :profiles, only: [:show, :edit, :update]
     resources :campaigns
     resources :sdkkeys
+    collection do
+      get :settings
+    end
   end
 
 end

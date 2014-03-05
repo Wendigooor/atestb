@@ -29,7 +29,7 @@ class CampaignsController < ApplicationController
 		if current_client == @client or current_client.admin
 			@campaign = Campaign.find(params[:id])
 
-			if @campaign.update_attributes(params[:campaign])
+			if @campaign.update_attributes(campaign_params)
 				if params[:step]
 					redirect_to campaigns_audience_path(:campaign_id => @campaign.id)
 				else
@@ -126,7 +126,9 @@ class CampaignsController < ApplicationController
 	def campaign_params
   		params.require(:campaign).permit(:caption, :purchased, :showed, :approved,
   				:title_color, :border_color, :target_device, :font, :font_size, :campaign_age_ranges_attributes, :gender,
-  				:multiple, :locations, :campaign_locations, :location_ids, :age_range_ids, :campaign_location_points_attributes,
+  				:multiple, :locations, :campaign_locations, :campaign_location_points_attributes,
+  				age_range_ids: [],
+  				location_ids: [],
   				:campaign_items_attributes => [:content])
 	end
 

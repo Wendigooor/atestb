@@ -1,8 +1,4 @@
 
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-
-
-
 <%= form_for @campaign, :url => path, :html => {:multipart => true, :id => "edit_campaign_form"} do |f| %>
 
   <% if @campaign.errors.any? %>
@@ -45,14 +41,12 @@
   </p>
 
   <p>
-  <% if !params[:step] %>
       <b>Age ranges:</b>
       <br />
       <% AgeRange.all.each do |age_range| %>
         <%= check_box_tag :age_ranges, age_range.id, @campaign.age_ranges.include?(age_range), :name => 'campaign[age_range_ids][]' %>
         <%= age_range.age_left %> - <%= age_range.age_right %>
       <% end %>
-  <% end %>
   </p>
 
   <p>
