@@ -13,7 +13,7 @@
 		<div class="r w white menu">
 
 			<div class="a white logo">
-				<%= image_tag "atestb_logo.jpg" %>
+				<%= link_to (image_tag "atestb_logo.jpg"), "#{request.protocol}#{request.host_with_port}" %>
 			</div>
 
 			<div class="r white links blog">

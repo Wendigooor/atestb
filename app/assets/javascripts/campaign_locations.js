@@ -90,7 +90,7 @@ $(document).ready(function(){
 	});
 
 	$(document).on("click", "[id=\"remove_location_point\"]", function(event) {
-		var location_point_id = $(this).attr('data-location-point-id');
+		var location_point_id = $(this).attr('location-point-id');
 		var url = '/campaign_location_points/' + location_point_id;
 
 		$.ajax({

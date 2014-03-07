@@ -3,32 +3,32 @@ $(document).ready(function(){
 
 	$('#add_adv_period').click(function(){
 		var url = '/adv_periods';
+		var campaign_id = $('#edit_campaign_form').attr('campaign_id');
 		var start_time = ($('#start_time').timepicker('getHour') * 60 + $('#start_time').timepicker('getMinute')) * 60;
 		var end_time = ($('#end_time').timepicker('getHour') * 60 + $('#end_time').timepicker('getMinute')) * 60;
 		var day = $('#day').find(":selected").text();
-		alert(url + " " + start_time + " " + end_time + " " + day + " " + AUTH_TOKEN)
 
 		$.ajax({
 			type: "POST",
 			url: url,
 			data: {
-				authenticity_token: AUTH_TOKEN,
 				campaign_id : campaign_id,
 				start_time : start_time,
 				end_time : end_time,
-				day : day
+				day : day,
+				authenticity_token: AUTH_TOKEN
 			},
 			dataType: "json",
 			success: function(data) {
-				$('#' + day).html(data.html)
+				$('#' + day).html(data.html);
 			}
 		});
 	});
 
 	$(document).on("click", "[id=\"remove_adv_period\"]", function(event) {
-		var adv_period_id = $(this).attr('data-adv-period-id');
+		var adv_period_id = $(this).attr('adv-period-id');
 		var url = '/adv_periods/' + adv_period_id;
-		var day = $(this).attr('data-day')
+		var day = $(this).attr('day');
 
 		$.ajax({
 			type: "DELETE",
