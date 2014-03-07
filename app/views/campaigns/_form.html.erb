@@ -1,5 +1,5 @@
 
-<%= form_for @campaign, :url => path, :html => {:multipart => true, :id => "edit_campaign_form"} do |f| %>
+<%= form_for @campaign, :url => path, :html => {:multipart => true, :id => "edit_campaign_form", :campaign_id => params[:id]} do |f| %>
 
   <% if @campaign.errors.any? %>
     <div id="error_explanation">
@@ -92,7 +92,7 @@
     <%= builder.label :longitude %>
     <%= builder.text_field :longitude, :id => "longitude", :readonly => true %>
     <%= builder.label :distance %> (in miles)
-    <%= builder.text_field :distance, :id => "distance_field", :readonly => true %>
+    <%= builder.text_field :distance, :id => "distance_field", :readonly => true, :value => 1 %>
     <%= builder.range_field :distance, :min => 1, :max => 500, :id => "distance", :value => 1 %>
   <% end %>  
   <br />

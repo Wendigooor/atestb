@@ -58,13 +58,13 @@ $(document).ready(function(){
 	});
 
 	$("#distance").change(function () {                    
-		var newValue = $('#distance').val();
-		$("#distance_field").val(newValue);
+		var new_value = $('#distance').val();
+		$("#distance_field").val(new_value);
 	});
 
 	$("#add_location_point").on('click', function() {
 		var url = "/campaign_location_points";
-		var campaign_id = $('#before_answers').attr('data-campaign-id');
+		var campaign_id = $('#edit_campaign_form').attr('campaign_id');
 
 		var address = $('#address').val();
 		var latitude = $("#latitude").val();

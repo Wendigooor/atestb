@@ -28,9 +28,9 @@
     <td><div class=<%="#{c.id}purchased"%>><%= c.purchased %></div></td>
     <td><%= c.showed %></td>
     <td><input type="text" class=<%="#{c.id}"%> ></td>
-    <td><%= link_to 'Delete', client_campaign_path(current_client, c), :method => :delete, :confirm => 'Are you sure?', :class => "btn btn-sm btn-danger" %></td>
+    <td><%= link_to 'Delete', client_campaign_path(current_client, c), :method => :delete, :data => { :confirm => 'Are you sure?' }, :class => "btn btn-sm btn-danger" %></td>
     <td><%= link_to 'Edit', edit_client_campaign_path(current_client, c), :class => 'btn btn-success' %></td>
-    <td><%= link_to 'Purchase this campaign', purchases_path, :class => 'purchase btn btn-primary', :confirm => 'Are you sure?' %></td>
+    <td><%= link_to 'Purchase this campaign', purchases_path, :class => 'purchase btn btn-primary', :data => { :confirm => 'Are you sure?' } %></td>
     <td><%= link_to 'Show', client_campaign_path(current_client, c), :class => 'btn btn-primary' %></td>
     <td><%= link_to c.started ? 'Pause' : 'Start', campaign_activates_path(c), :method => :post, :class => 'btn btn-sm btn-success' %></td>
     <td>
