@@ -8,7 +8,7 @@ gem 'devise'
 gem 'rails-settings-cached', '0.3.1'
 
 gem 'geocoder'
-gem 'carmen-rails', '~> 1.0.0'
+gem 'countries'
 
 gem 'will_paginate', '~> 3.0'
 

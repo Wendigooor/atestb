@@ -44,7 +44,7 @@ class Campaign < ActiveRecord::Base
     if values.count == Location.all.count
       self.campaign_locations.destroy_all
     else
-      self.locations = Location.all - Location.find_all_by_id(values)
+      self.locations = Location.all - Location.where(id: values)
     end
   end
 

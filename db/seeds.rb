@@ -11,3 +11,9 @@ Settings.minimal_purchase = 0
 AgeRange.create(index: 1, age_left: 18, age_right: 24)
 AgeRange.create(index: 2, age_left: 25, age_right: 34)
 AgeRange.create(index: 3, age_left: 35, age_right: 44)
+
+
+countries = ISO3166::Country.all
+countries.each do |c|
+	Location.create(country: c.first, code: c.last)
+end
