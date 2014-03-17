@@ -6,7 +6,7 @@
 <h1>Editing campaign</h1>
 
 <% if @campaign.client == current_client || current_client.admin %>
-	<%= render 'form', :path => client_campaign_path %>
+	<%= render 'form', :path => client_campaign_path, :action => :edit %>
 <% else %>
 	You can't edit approved or foreign campaign.
 <% end %>

@@ -6,9 +6,9 @@
       <h2><%= pluralize(@campaign.errors.count, "error") %> prohibited this campaign from being saved:</h2>
 
       <ul>
-      <% @campaign.errors.full_messages.each do |msg| %>
+        <% @campaign.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>
-      <% end %>
+        <% end %>
       </ul>
     </div>
   <% end %>
@@ -36,23 +36,25 @@
   <p>
     <b><%= f.label :target_device %></b>
     <% Campaign::DEVICES.each do |device| %>
-      <%= f.radio_button :target_device, device.last, :checked => @campaign.target_device == device.last ? true : false %> <%= device.first %>
+    <%= f.radio_button :target_device, device.last, :checked => @campaign.target_device == device.last ? true : false %> <%= device.first %>
     <% end %>
   </p>
 
-  <p>
+  <% if action != :new %>
+    <p>
       <b>Age ranges:</b>
       <br />
       <% AgeRange.all.each do |age_range| %>
-        <%= check_box_tag :age_ranges, age_range.id, @campaign.age_ranges.include?(age_range), :name => 'campaign[age_range_ids][]' %>
-        <%= age_range.age_left %> - <%= age_range.age_right %>
+      <%= check_box_tag :age_ranges, age_range.id, @campaign.age_ranges.include?(age_range), :name => 'campaign[age_range_ids][]' %>
+      <%= age_range.age_left %> - <%= age_range.age_right %>
       <% end %>
-  </p>
+    </p>
+  <% end %>
 
   <p>
     <b><%= f.label :gender %></b>
     <% Campaign::GENDERS.each do |gender| %>
-      <%= f.radio_button :gender, gender.last, :checked => @campaign.gender == gender.last ? true : false %> <%= gender.first %>
+    <%= f.radio_button :gender, gender.last, :checked => @campaign.gender == gender.last ? true : false %> <%= gender.first %>
     <% end %>
   </p>
   <p>
@@ -60,8 +62,7 @@
     <%= f.check_box :multiple %>
   </p>
 
-<% if !params[:step] %>
-
+  <% if action != :new %>
     <%= select_tag :day, options_for_select(Date::DAYNAMES), :id => "day" %>
     <br />
     From: <input type="text" id="start_time" style="width: 70px;", value=""> - To: <input type="text" id="end_time" style="width: 70px;", value="">
@@ -71,51 +72,44 @@
     <b>Days scheduler:</b>
     <br />
     <% Date::DAYNAMES.each do |day| %>
-      <br />
-      <%= day %>
-      <br />
-      <div id="<%= day %>">
-        <%= render 'adv_periods/campaign_periods', :campaign => @campaign, :day => day %>
-      </div>
+    <br />
+    <%= day %>
+    <br />
+    <div id="<%= day %>">
+      <%= render 'adv_periods/campaign_periods', :campaign => @campaign, :day => day %>
+    </div>
     <% end %>
 
-  <br />
-
-
-
-  <b>New point:</b>
+    <b>New point:</b>
     <%= fields_for :campaign_location_point do |builder| %>
-    <%= builder.text_field :address, :id => "address", :placeholder => "Insert address" %>
-    <input type="button" id="address_btn" class="btn btn-primary" value="Find">
-    <%= builder.label :latitude %>
-    <%= builder.text_field :latitude, :id => "latitude", :readonly => true %>
-    <%= builder.label :longitude %>
-    <%= builder.text_field :longitude, :id => "longitude", :readonly => true %>
-    <%= builder.label :distance %> (in miles)
-    <%= builder.text_field :distance, :id => "distance_field", :readonly => true, :value => 1 %>
-    <%= builder.range_field :distance, :min => 1, :max => 500, :id => "distance", :value => 1 %>
-  <% end %>  
-  <br />
-  <input type="button" id="add_location_point" class="btn btn-primary" style="width: 170px;" value="Add location point">
-  <br />
-  <div id="location_points" style='width: 800px;'>
-    <%= render 'campaign_location_points/points', :campaign => @campaign %>
-  </div>
+      <%= builder.text_field :address, :id => "address", :placeholder => "Insert address" %>
+      <input type="button" id="address_btn" class="btn btn-primary" value="Find">
+      <%= builder.label :latitude %>
+      <%= builder.text_field :latitude, :id => "latitude", :readonly => true %>
+      <%= builder.label :longitude %>
+      <%= builder.text_field :longitude, :id => "longitude", :readonly => true %>
+      <%= builder.label :distance %> (in miles)
+      <%= builder.text_field :distance, :id => "distance_field", :readonly => true, :value => 1 %>
+      <%= builder.range_field :distance, :min => 1, :max => 500, :id => "distance", :value => 1 %>
+    <% end %>  
+    <br />
+    <input type="button" id="add_location_point" class="btn btn-primary" style="width: 170px;" value="Add location point">
+    <br />
+    <div id="location_points" style='width: 800px;'>
+      <%= render 'campaign_location_points/points', :campaign => @campaign %>
+    </div>
 
-  <br />
+    <br />
 
-  <div style='width: 800px;'>
-    <div id="map" style='width: 800px; height: 400px;'></div>
-  </div>
-<% end %>
+    <div style='width: 800px;'>
+      <div id="map" style='width: 800px; height: 400px;'></div>
+    </div>
 
-  <br />
-
-  <% if !params[:step] %>
+    <br />
 
     <button id="preview_button" class="btn btn-primary" type="button" data-type-ad='<%= @campaign.type_ad %>' data-items-count='<%= @campaign.campaign_items.count %>'
-      data-title-color='<%= @campaign.title_color %>' data-border-color='<%= @campaign.border_color %>' data-background-url='<%= @campaign.background_url %>'
-      data-font-size='<%= @campaign.font_size %>'> Show campaign preview </button>
+    data-title-color='<%= @campaign.title_color %>' data-border-color='<%= @campaign.border_color %>' data-background-url='<%= @campaign.background_url %>'
+    data-font-size='<%= @campaign.font_size %>'> Show campaign preview </button>
     
     <div id="campaign_preview">
 
@@ -143,42 +137,29 @@
 
     </div>
 
-  <% end %>
+    </br>
 
-  </br>
-
-  <h3> Answers </h3>
-
-  <% @campaign.campaign_items.each_with_index do |item, index| %>
-    <%= f.fields_for :campaign_items, item do |item|%>
-      <b>#<%= index+1 %></b>
-      <%= render "campaign_item", :f => item %>
-    <% end %>
-  <% end %>
-
-  </br>
-  </br>
-
-
-  <% if !params[:step] %>
     <b>Locations:</b>
     <button id="locations_button" class="btn btn-primary" type="button" > Show campaign locations </button>
     <div id="locations">
       <b><%= f.label :locations %></b>
       <% Location.all.each do |location| %>
-        <%= check_box_tag :locations, location.id, !@campaign.locations.include?(location), :name => 'campaign[location_ids][]' -%>
-        <%= location.country %>
+      <%= check_box_tag :locations, location.id, !@campaign.locations.include?(location), :name => 'campaign[location_ids][]' -%>
+      <%= location.country %>
       <% end %>
     </div>
   <% end %>
 
+  <h3> Answers </h3>
+  <% @campaign.campaign_items.each_with_index do |item, index| %>
+  <%= f.fields_for :campaign_items, item do |item|%>
+  <b>#<%= index+1 %></b>
+  <%= render "campaign_item", :f => item %>
+  <% end %>
+  <% end %>
 
-    <% if params[:step] %>
-        <%= hidden_field :step, :value => true %>
-    <% end %>
-
-    <div class="actions">
-      <%= f.submit %>
-      <%= link_to 'Back', client_campaigns_path, :class => "btn btn-primary" %>
-    </div>
+  <div class="actions">
+    <%= f.submit 'Create!', :class => "btn btn-primary" %>
+    <%= link_to 'Back', client_campaigns_path, :class => "btn btn-danger" %>
+  </div>
 <% end %>
